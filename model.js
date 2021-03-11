@@ -10,7 +10,7 @@ const uniqueId = (() => {
   return () => gen.next().value;
 })();
 
-class Tree {
+export default class Tree {
   #children = new Map();
   #parent = null;
   #id = uniqueId();
@@ -151,6 +151,9 @@ class Tree {
   }
 }
 
+// export default new Tree();
+/*
+
 const tree = new Tree("root");
 tree.name = "firstTree";
 // console.log(tree.name);
@@ -196,3 +199,4 @@ console.log(tree.findAllNodeByName("one-1"));
 //handle below situations
 prev.appendChildNode(tree); //infinite circular relation (parent contains child, child contains parent)
 prev.appendChildNode(prev); //insert itself as a child, infinite loop
+*/

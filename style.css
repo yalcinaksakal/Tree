@@ -1,31 +1,107 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
 
+:root {
+  --scroll-thumb-color: rgb(80, 175, 96);
+  --bg-color: rgb(235, 235, 235);
+}
+
 body {
   width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
-  background: rgb(192, 192, 192);
+  background: whitesmoke;
   font-family: Quicksand, sans-serif;
 
+  /* scroll-margin: 0 5px; */
 }
 
-.tree-container{
+.tree-container {
   height: 100vh;
-  width: 80vw;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.tree-item {
+  margin: 80px auto 20px auto;
+  width: 90vw;
+  height: 80vh;
+  border-radius: 10px;
+  background: var(--bg-color);
+  border: none;
+  box-shadow: 0 2px 10px 1px black;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: space-evenly;
-
+  justify-content: center;
 }
-
 .tree {
-  height: 2rem;
-  width: 2rem;
-  border: 1px solid rgb(88, 87, 87);
-  box-shadow: 0 1px 5px 2px rgb(0, 0, 0);
- 
-  border-radius: 50%;
+  padding: 5px;
+  width: 98%;
+  height: 96%;
+  overflow: auto;
 }
 
+/* nodes---------------------------------------- */
+.node {
+  position: absolute;
+  top: 150px;
+  left: 150px;
+  height: 4rem;
+  width: 4rem;
+  background: whitesmoke;
+  border: 1px solid rgb(88, 87, 87);
+  box-shadow: 0 1px 5px 1px rgb(0, 0, 0);
+  margin-bottom: 2rem;
+  border-radius: 50%;
+  transition: all ease 0.3s;
+}
+
+.fas {
+  position: absolute;
+  font-size: 1.2rem;
+}
+.fa-plus {
+  top: 2.8rem;
+  left: 1.5rem;
+  color: rgb(4, 73, 211);
+  opacity: 0;
+}
+.fa-trash {
+  top: 1.5rem;
+  left: 0.1rem;
+  color: red;
+  opacity: 0;
+}
+.fa-redo-alt {
+  top: 0.1rem;
+  left: 1.4rem;
+  color: black;
+  opacity: 0;
+}
+.node:hover {
+  transform: scale(1.1);
+}
+
+.node:hover > .fas {
+  opacity: 0.5;
+}
+.fas:hover {
+  opacity: 1 !important;
+}
+/* scroll bar */
+/* scroll bar */
+::-webkit-scrollbar {
+  background: var(--bg-color);
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(48, 48, 48);
+  border-radius: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb-color);
+  border-radius: 15px;
+  direction: rtl;
+}
