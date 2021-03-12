@@ -27,22 +27,7 @@ export default function drawLine(start, end) {
   line.style.left = ax + width / 2 + "px";
   line.style.top = ay + width / 2 + "px";
   line.style.transformOrigin = "top left";
-  console.log(angle);
+
   line.style.transform = "rotate(" + angle + "deg)";
   document.querySelector(".tree").appendChild(line);
 }
-
-//   $(document).on("click", "", function (event) {
-//     start.css("left", event.pageX);
-//     start.css("top", event.pageY);
-//   });
-
-//   $(document).on("mousemove", "", function (event) {
-//     //set end point to where the mouse currently is at.
-//     end.css("left", event.pageX);
-//     end.css("top", event.pageY);
-
-//   });
-// }
-
-drawLine(document.getElementById("one"), document.getElementById("two"));

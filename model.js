@@ -9,8 +9,9 @@ const uniqueId = (() => {
   const gen = uniqueIdGenerator();
   return () => gen.next().value;
 })();
-
-export default class Tree {
+let nodePosY = 0;
+export let nodesArray = [];
+class Tree {
   #children = new Map();
   #parent = null;
   #id = uniqueId();
@@ -18,7 +19,6 @@ export default class Tree {
   constructor(name) {
     if (!name || typeof name !== "string" || !name.trim().length)
       throw new Error("Name must be a non-empty String ");
-
     this.#name = name;
   }
   set name(newName) {
@@ -29,7 +29,7 @@ export default class Tree {
   get name() {
     return this.#name;
   }
-  get identfier() {
+  get identifier() {
     return this.#id;
   }
 
@@ -59,7 +59,7 @@ export default class Tree {
 
   createChildNode(name) {
     const newNode = new Tree(name);
-    this.#children.set(newNode.identfier, newNode);
+    this.#children.set(newNode.identifier, newNode);
     newNode.parentNode = this;
     return newNode;
   }
@@ -75,16 +75,45 @@ export default class Tree {
     return str;
   }
 
+  #toGraphPos(node, x = 0) {
+    node.children.forEach((child, i) => {
+      nodesArray.push({
+        nodeName: child.name,
+        nodeId: child.identifier,
+        parentId: child.#parent.identifier,
+        x: x + 1,
+        y: nodePosY,
+      });
+
+      this.#toGraphPos(child, x + 1);
+      if (i < node.children.length - 1) nodePosY++;
+    });
+  }
+  createTreeToGraphPositionsAsNodesArray() {
+    nodePosY = 0;
+    nodesArray = [];
+    nodesArray.push({
+      nodeName: this.name,
+      nodeId: this.identifier,
+      parentId: this.#parent?.identifier,
+      x: 0,
+      y: 0,
+    });
+    this.#toGraphPos(this);
+    return nodesArray;
+  }
+
   hasChildNode(needle) {
-    if (needle instanceof Tree) return this.#children.has(needle.identfier);
+    if (needle instanceof Tree) return this.#children.has(needle.identifier);
     for (let child of this.children)
-      if (child.name === needle || child.identfier === needle) return true;
+      if (child.name === needle || child.identifier === needle) return true;
     return false;
   }
 
   getChildNode(nameOrID) {
     for (let child of this.children)
-      if (child.name === nameOrID || child.identfier === nameOrID) return child;
+      if (child.name === nameOrID || child.identifier === nameOrID)
+        return child;
     return null;
   }
 
@@ -92,13 +121,13 @@ export default class Tree {
     if (!this.hasChildNode(needle)) return;
     let removeNode;
     if (needle instanceof Tree) {
-      this.#children.delete(needle.identfier);
+      this.#children.delete(needle.identifier);
       removeNode = needle;
     } else
       for (let child of this.children)
-        if (child.name === needle || child.identfier === needle) {
+        if (child.name === needle || child.identifier === needle) {
           removeNode = child;
-          return this.#children.delete(child.identfier);
+          return this.#children.delete(child.identifier);
         }
     //just in case there is a varibale holding that node
     if (removeNode) removeNode.parentNode = null;
@@ -115,12 +144,12 @@ export default class Tree {
         throw new Error("Node cannot contain itself or one of its parents");
       else searchParent = searchParent.parentNode;
     }
-    this.#children.set(node.identfier, node);
+    this.#children.set(node.identifier, node);
     node.parentNode = this;
   }
 
   print() {
-    console.log(`\n${this.name}${this.#getTreeString(this, 2)}`);
+    return `${this.name}${this.#getTreeString(this, 2)}`;
   }
   //traverse all leaves of "this" and run cb function, Depth first search
   traverse(callBackFunc) {
@@ -151,13 +180,35 @@ export default class Tree {
   }
 }
 
+export const treeTemplate = new Tree("Root");
+treeTemplate
+  .createChildNode("Level 1")
+  .parentNode.createChildNode("Level 1")
+  .createChildNode("Level 2")
+  .createChildNode("Level 3")
+  .parentNode.createChildNode("Level 3")
+  .createChildNode("Level 4")
+  .parentNode.parentNode.createChildNode("Level 3")
+  .createChildNode("Level 4")
+  .createChildNode("Level 5")
+  .createChildNode("Level 6")
+  .createChildNode("Level 7")
+  .parentNode.createChildNode("Level 7")
+  .parentNode.parentNode.createChildNode("Level 5")
+  .parentNode.createChildNode("Level 5")
+  .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
+    "Level 1"
+  )
+  .createChildNode("Level 2")
+  .parentNode.createChildNode("Level 2");
+
 // export default new Tree();
 /*
 
 const tree = new Tree("root");
 tree.name = "firstTree";
 // console.log(tree.name);
-// console.log(tree.identfier);
+// console.log(tree.identifier);
 // console.log(tree.children);
 // console.log(tree.childrenCount);
 // console.log(tree.parentNode);
