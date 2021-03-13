@@ -26,7 +26,7 @@ body {
 }
 #tree-search {
   position: absolute;
-  top: 3vh;
+  top: 3.5vh;
   left: 1vw;
   width: 12rem;
   height: 2.5rem;
@@ -36,15 +36,34 @@ body {
   outline: none;
 }
 
+.algorithm {
+  position: absolute;
+  top: 0.5vh;
+
+  width: auto;
+  height: 4.9rem;
+  border-radius: 10px;
+}
+
+#bfs {
+  left: 16rem;
+}
+#dfs {
+  left: 23rem;
+}
+
+.algorithm:hover {
+  filter: brightness(0.6);
+}
 .scale-normal {
   position: absolute;
   color: white;
   font-size: 2rem;
   top: 3.2vh;
-  right: 3.5rem;
+  right: 3.8rem;
   user-select: none;
 }
-
+.fa-search:hover,
 .fa-search-minus:hover,
 .scale-normal:hover,
 .fa-search-plus:hover {
@@ -182,4 +201,47 @@ p {
 ::-webkit-scrollbar-thumb {
   background: var(--scroll-thumb-color);
   border-radius: 15px;
+}
+
+/* meda queries */
+@media screen and (max-width: 650px) {
+  #tree-search {
+    width: 9rem;
+  }
+  .fa-search-plus,
+  .fa-search,
+  .fa-search-minus {
+    font-size: 1rem;
+    top: 2.4rem;
+  }
+  .fa-search {
+    left: 9.8rem;
+  }
+  .fa-search-minus {
+    right: 3.7rem;
+  }
+  .algorithm {
+    top: 1.6rem;
+    height: 2.4rem;
+  }
+  #bfs {
+    left: 11.5rem;
+  }
+  #dfs {
+    left: 15rem;
+  }
+  .scale-normal {
+    font-size: 1.4rem;
+    top: 4.3vh;
+    right: 2.3rem;
+  }
+}
+@media screen and (max-width: 400px) {
+  .algorithm {
+    top: 1.9rem;
+    height: 1.8rem;
+  }
+  #dfs {
+    left: 14.2rem;
+  }
 }
