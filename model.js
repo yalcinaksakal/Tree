@@ -180,6 +180,7 @@ class Tree {
   }
 }
 
+//demo tree
 export const treeTemplate = new Tree("Root");
 treeTemplate
   .createChildNode("Level 1")
@@ -194,13 +195,14 @@ treeTemplate
   .createChildNode("Level 6")
   .createChildNode("Level 7")
   .parentNode.createChildNode("Level 7")
-  .parentNode.parentNode.createChildNode("Level 5")
-  .parentNode.createChildNode("Level 5")
+  .parentNode.parentNode.createChildNode("Level 6")
+  .parentNode.createChildNode("Level 6")
   .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
     "Level 2"
   )
   .createChildNode("Level 3")
-  .parentNode.createChildNode("Level 3").parentNode.createChildNode("Level 3");
+  .parentNode.createChildNode("Level 3")
+  .parentNode.createChildNode("Level 3");
 
 // export default new Tree();
 /*
