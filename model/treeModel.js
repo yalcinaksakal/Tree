@@ -168,6 +168,19 @@ class Tree {
     });
     return foundNode;
   }
+
+  //find by ID
+  findNodeByID(ID) {
+    let foundNode = null;
+    this.traverse(node => {
+      if (node.identifier === ID) {
+        foundNode = node;
+        return foundNode;
+      }
+    });
+    return foundNode;
+  }
+
   //find all occurances
   findAllNodeByName(name) {
     const children = [];
@@ -185,7 +198,8 @@ export const treeTemplate = new Tree("Root");
 treeTemplate
   .createChildNode("Level 1")
   .parentNode.createChildNode("Level 1")
-  .parentNode.createChildNode("Level 1").parentNode.createChildNode("Level 1")
+  .parentNode.createChildNode("Level 1")
+  .parentNode.createChildNode("Level 1")
   .parentNode.createChildNode("Level 1")
   .createChildNode("Level 2")
   .createChildNode("Level 3")
@@ -203,9 +217,8 @@ treeTemplate
   .parentNode.createChildNode("Level 6")
   .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
     "Level 2"
-  ).parentNode.createChildNode(
-    "Level 2"
   )
+  .parentNode.createChildNode("Level 2")
   .createChildNode("Level 3")
   .parentNode.createChildNode("Level 3")
   .parentNode.createChildNode("Level 3");

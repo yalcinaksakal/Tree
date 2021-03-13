@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="icon" type="image/png" href="./imgs/favicon.png" />
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
     />
-    <title>Tree</title>
+    <title>Data structures/algorithms by YA</title>
     <script defer src="controller.js" type="module"></script>
   </head>
   <body>
@@ -23,13 +23,23 @@
         />
         <i class="fas fa-search"></i>
       </div>
-      <img src="./bfs.jpg" title="BFS" alt="BFS" class="algorithm" id="bfs" />
-      <img src="./dfs.jpg" title="DFS" alt="DFS" class="algorithm" id="dfs" />
+      <button class="algorithm" id="bfs" title="Animate BFS">BFS</button>
+      <button class="algorithm selected" id="dfs" title="Animate DFS">
+        DFS
+      </button>
+
       <i class="fas fa-search-minus"></i>
       <span class="scale-normal">1:1</span>
       <i class="fas fa-search-plus"></i>
     </div>
     <div class="tree-item">
+      <!-- save and load -->
+      <div class="save-load">
+        <i class="fas fa-download" title="Save to local storage"></i>
+        <i class="fas fa-upload" title="Load from local storage"></i>
+        <i class="fas fa-broom" title="Clean board"></i>
+        <i class="fas fa-plus-square" title="New tree"></i>
+      </div>
       <!-- Tree -->
       <div class="scalable">
         <div class="tree">

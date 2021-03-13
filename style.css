@@ -38,23 +38,40 @@ body {
 
 .algorithm {
   position: absolute;
-  top: 0.5vh;
-
+  top: 4vh;
+  color: white;
+  background: rgba(31, 48, 230, 0.435);
+  font-size: 1.5rem;
   width: auto;
-  height: 4.9rem;
+  height: 2rem;
   border-radius: 10px;
+  transition: all ease 0.3s;
+  font-weight: 300;
+  user-select: none;
+  outline: none;
+  border: none;
+  box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.421);
 }
 
 #bfs {
-  left: 16rem;
+  left: 15.5rem;
 }
 #dfs {
-  left: 23rem;
+  left: 20rem;
 }
 
-.algorithm:hover {
-  filter: brightness(0.6);
+/* buttons */
+.algorithm.selected {
+  color: rgb(7, 213, 72);
+  transform: translate(0, 1px);
+  box-shadow: none;
 }
+.algorithm:hover {
+  filter: brightness(1.5);
+  transform: scale(1.1);
+}
+
+/* scale */
 .scale-normal {
   position: absolute;
   color: white;
@@ -97,6 +114,45 @@ body {
   transition: all ease 0.3s;
 }
 
+.save-load {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  height: 3rem;
+  width: 10.8rem;
+  top: 0.8rem;
+  right: 2.5vw;
+  z-index: 2;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 10px 2px black;
+}
+.save-load .fas {
+  top: 0.4rem;
+  font-size: 2rem;
+  color: var(--scroll-thumb-color);
+}
+.fa-upload {
+  right: 0.5rem;
+}
+.fa-download {
+  right: 3rem;
+}
+.fa-broom {
+  right: 5.3rem;
+}
+.fa-plus-square {
+  top: 0.7rem;
+  right: 8.5rem;
+}
+
+.fa-plus-square:hover,
+.fa-broom:hover,
+.fa-download:hover,
+.fa-upload:hover {
+  transform: scale(1.2);
+  color: rgb(181, 62, 62);
+}
 /* nodes---------------------------------------- */
 .node {
   position: absolute;
@@ -160,6 +216,12 @@ p {
   color: black;
   opacity: 0;
 }
+.fa-quote-left {
+  top: 1.6rem;
+  left: 3rem;
+  color: rgb(10, 191, 22);
+  opacity: 0;
+}
 .node:hover {
   transform: scale(1.1);
   background: whitesmoke;
@@ -180,6 +242,20 @@ p {
 .line {
   background-color: rgb(255, 25, 25);
   height: 1px;
+}
+
+/* input el */
+.input-el {
+  position: absolute;
+  background: rgba(75, 76, 76, 0.877);
+  color: white;
+  font-weight: 300;
+  height: 2.5rem;
+  width: 10rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
 }
 
 /* ---------------------------------------- */
@@ -208,6 +284,20 @@ p {
   #tree-search {
     width: 9rem;
   }
+
+  .algorithm {
+    top: 3.9vh;
+    font-size: 1.3rem;
+    border-radius: 5px;
+  }
+
+  #bfs {
+    left: 11.4rem;
+  }
+  #dfs {
+    left: 15.5rem;
+  }
+
   .fa-search-plus,
   .fa-search,
   .fa-search-minus {
@@ -220,16 +310,7 @@ p {
   .fa-search-minus {
     right: 3.7rem;
   }
-  .algorithm {
-    top: 1.6rem;
-    height: 2.4rem;
-  }
-  #bfs {
-    left: 11.5rem;
-  }
-  #dfs {
-    left: 15rem;
-  }
+
   .scale-normal {
     font-size: 1.4rem;
     top: 4.3vh;
@@ -238,10 +319,14 @@ p {
 }
 @media screen and (max-width: 400px) {
   .algorithm {
-    top: 1.9rem;
-    height: 1.8rem;
+    top: 4vh;
+    font-size: 0.6rem;
+  }
+
+  #bfs {
+    left: 11.2rem;
   }
   #dfs {
-    left: 14.2rem;
+    left: 13.5rem;
   }
 }
