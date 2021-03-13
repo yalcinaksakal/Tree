@@ -156,8 +156,7 @@ body {
 /* nodes---------------------------------------- */
 .node {
   position: absolute;
-  top: 150px;
-  left: 150px;
+
   height: 4rem;
   width: 4rem;
   background: rgb(45, 138, 196);
@@ -251,11 +250,12 @@ p {
   color: white;
   font-weight: 300;
   height: 2.5rem;
-  width: 10rem;
+  width: 7rem;
   font-size: 1rem;
   border-radius: 10px;
   border: none;
   outline: none;
+  padding: 0 0.5rem;
 }
 
 /* ---------------------------------------- */

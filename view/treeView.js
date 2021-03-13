@@ -32,6 +32,7 @@ function createNode(node) {
   nodeDiv.append(addChild, deleteNode, changeParent, rename, name);
 
   // nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
+
   nodeDiv.style.top = node.x * nodeWidth * 1.5 + 0.5 + "rem";
   nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
   //append to tree
@@ -42,9 +43,10 @@ function createNode(node) {
 // -----------------------
 //renaming nodes, adding child
 let inputObject = {};
+
+///dynamic input el
 const inputEl = document.createElement("input");
 inputEl.classList.add("input-el");
-inputEl.setAttribute("placeholder", "Node name");
 inputEl.style.zIndex = 10;
 
 let isInputing = false;
@@ -52,22 +54,40 @@ let isInputing = false;
 const ifEnter = e => {
   if (e.key === "Enter") submitInput();
 };
-function submitInput() {
-  if (inputObject.operation === "rename" && inputEl.value) {
-    inputObject.func(inputObject.operation, inputObject.node, inputEl.value);
-  }
+
+//renamenode
+function renameNode(node) {
+  inputObject.func(inputObject.operation, inputObject.node, inputEl.value);
+  //update node info
+  node.setAttribute("title", `Name: ${inputEl.value}, ID: ${inputObject.node}`);
+
+  //p element of node holds name of node
+  node.childNodes[4].textContent = inputEl.value.slice(0, 7);
+}
+
+//return node to its normal state
+function normalizeNode(node) {
   inputEl.removeEventListener("keypress", ifEnter);
   treeEl.removeChild(inputEl);
   inputEl.value = "";
   isInputing = false;
-  document.getElementById(inputObject.node).style.background =
-    "rgb(45, 138, 196)";
+  node.style.background = "rgb(45, 138, 196)";
 }
 
-function renameNode() {
-  document.getElementById(inputObject.node).style.background = "#3DFEAE";
-  inputEl.style.top = inputObject.y - 170 + "px"; //tree offset x=170
-  inputEl.style.left = inputObject.x + "px";
+///submit input
+function submitInput() {
+  const nodeAtOperation = document.getElementById(inputObject.node);
+  //renaming
+  if (inputObject.operation === "rename" && inputEl.value)
+    renameNode(nodeAtOperation);
+  //end operation return to normal state
+  normalizeNode(nodeAtOperation);
+}
+
+function startOperation(node) {
+  node.style.background = "#3DFEAE";
+  inputEl.style.top = +node.style.top.slice(0, -3) + 5 + "rem"; //node height 4rem
+  inputEl.style.left = node.style.left;
   treeEl.appendChild(inputEl);
   inputEl.focus();
   inputEl.addEventListener("keypress", ifEnter);
@@ -92,15 +112,29 @@ export function treeOperationsHandler(handler) {
     //rename
     const rename = e.target.closest(".fa-quote-left");
     if (rename) {
+      inputEl.setAttribute("placeholder", "New name");
       isInputing = true;
       inputObject = {
         func: handler,
         node: node.id,
-        x: e.pageX,
-        y: e.pageY,
         operation: "rename",
       };
-      renameNode();
+      startOperation(node);
+      return;
+    }
+
+    //Add child
+    const addChid = e.target.closest(".fa-plus");
+    if (addChid) {
+      inputEl.setAttribute("placeholder", "Child name");
+      isInputing = true;
+      inputObject = {
+        func: handler,
+        node: node.id,
+        operation: "addChild",
+      };
+      startOperation(node);
+      return;
     }
   });
 }
