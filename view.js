@@ -5,6 +5,7 @@
 import drawLine from "./helperFunctions.js";
 
 let scale = 1;
+
 const tree = document.querySelector(".tree");
 const nav = document.querySelector(".nav");
 const treeEl = document.querySelector(".tree");
@@ -15,7 +16,7 @@ function createNode(node) {
   const nodeDiv = document.createElement("div");
   nodeDiv.classList.add("node");
   nodeDiv.setAttribute("id", node.nodeId);
-  nodeDiv.setAttribute("title", node.nodeName);
+  nodeDiv.setAttribute("title", `Name: ${node.nodeName}, ID: ${node.nodeId}`);
   const addChild = document.createElement("i");
   addChild.classList.add("fas", "fa-plus");
   addChild.setAttribute("title", "Add new child");
@@ -27,10 +28,11 @@ function createNode(node) {
   changeParent.setAttribute("title", "Change parent");
   const name = document.createElement("p");
   name.textContent = node.nodeName.slice(0, 7);
-
   nodeDiv.append(addChild, deleteNode, changeParent, name);
-  nodeDiv.style.top = node.y * nodeWidth * 1.5 + 0.5 + "rem";
-  nodeDiv.style.left = node.x * nodeWidth * 1.5 + 0.5 + "rem";
+
+  // nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
+  nodeDiv.style.top = node.x * nodeWidth * 1.5 + 0.5 + "rem";
+  nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
   //append to tree
   treeEl.appendChild(nodeDiv);
   //create lines

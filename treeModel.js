@@ -9,8 +9,8 @@ const uniqueId = (() => {
   const gen = uniqueIdGenerator();
   return () => gen.next().value;
 })();
-let nodePosY = 0;
-export let nodesArray = [];
+export let nodePosY = 0;
+let nodesArray = [];
 class Tree {
   #children = new Map();
   #parent = null;
@@ -185,6 +185,8 @@ export const treeTemplate = new Tree("Root");
 treeTemplate
   .createChildNode("Level 1")
   .parentNode.createChildNode("Level 1")
+  .parentNode.createChildNode("Level 1").parentNode.createChildNode("Level 1")
+  .parentNode.createChildNode("Level 1")
   .createChildNode("Level 2")
   .createChildNode("Level 3")
   .parentNode.createChildNode("Level 3")
@@ -193,11 +195,15 @@ treeTemplate
   .createChildNode("Level 4")
   .createChildNode("Level 5")
   .createChildNode("Level 6")
+  .parentNode.createChildNode("Level 6")
+  .parentNode.createChildNode("Level 6")
   .createChildNode("Level 7")
   .parentNode.createChildNode("Level 7")
   .parentNode.parentNode.createChildNode("Level 6")
   .parentNode.createChildNode("Level 6")
   .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
+    "Level 2"
+  ).parentNode.createChildNode(
     "Level 2"
   )
   .createChildNode("Level 3")
