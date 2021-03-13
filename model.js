@@ -197,10 +197,10 @@ treeTemplate
   .parentNode.parentNode.createChildNode("Level 5")
   .parentNode.createChildNode("Level 5")
   .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
-    "Level 1"
+    "Level 2"
   )
-  .createChildNode("Level 2")
-  .parentNode.createChildNode("Level 2");
+  .createChildNode("Level 3")
+  .parentNode.createChildNode("Level 3").parentNode.createChildNode("Level 3");
 
 // export default new Tree();
 /*

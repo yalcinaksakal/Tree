@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap");
 
 :root {
-  --scroll-thumb-color: rgb(74, 74, 74);
+  --scroll-thumb-color: rgb(172, 172, 172);
   --bg-color: rgb(235, 235, 235);
 }
 
@@ -14,24 +14,57 @@ body {
   font-family: Quicksand, sans-serif;
 }
 
+.nav {
+  position: absolute;
+  top: 2vh;
+  left: 2vw;
+  width: 96vw;
+  height: 12vh;
+  background: var(--scroll-thumb-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px 1px black;
+}
+
+.scale-normal {
+  position: absolute;
+  color: white;
+  font-size: 2rem;
+  top: 3.2vh;
+  right: 7vw;
+  user-select: none;
+}
+
+.fa-search-minus:hover,
+.scale-normal:hover,
+.fa-search-plus:hover {
+  color: black;
+}
+
 .tree-item {
   position: absolute;
-  top: 15vh;
+  top: 17vh;
   left: 2vw;
   width: 96vw;
   height: 80vh;
   border-radius: 10px;
-  background: var(--bg-color);
+  background-color: #eae8ec;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%230e44c7' fill-opacity='0.4'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+
   border: none;
   box-shadow: 0 2px 10px 1px black;
 }
-.tree {
+.scalable {
   position: absolute;
   top: 5px;
   left: 5px;
   width: 99%;
   height: 98.5%;
   overflow: auto;
+}
+.tree {
+  position: absolute;
+  transform: scale(1);
+  transition: all ease 0.3s;
 }
 
 /* nodes---------------------------------------- */
@@ -41,7 +74,7 @@ body {
   left: 150px;
   height: 4rem;
   width: 4rem;
-  background: rgb(164, 164, 164);
+  background: rgb(45, 138, 196);
   border: 1px solid rgb(88, 87, 87);
   box-shadow: 0 1px 5px 1px rgb(0, 0, 0);
   border-radius: 50%;
@@ -59,6 +92,20 @@ p {
 .fas {
   position: absolute;
   font-size: 0.8rem;
+  transition: all ease 0.3s;
+}
+.fa-search-plus {
+  top: 4vh;
+  right: 2vw;
+}
+.fa-search-minus {
+  top: 4vh;
+  right: 12vw;
+}
+.fa-search-minus,
+.fa-search-plus {
+  color: white;
+  font-size: 2rem;
 }
 .fa-plus {
   top: 3.1rem;

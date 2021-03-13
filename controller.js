@@ -7,4 +7,3 @@ const controlRenderTree = function () {
 };
 
 view.renderTreeHandler(controlRenderTree);
-console.log(model.treeTemplate.print());
