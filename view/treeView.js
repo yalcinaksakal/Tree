@@ -10,7 +10,7 @@ const scalableEl = document.querySelector(".scalable");
 const frameEl = document.querySelector(".square");
 const nodeWidth = 4; //nodes are 4rem
 
-function createNode(node) {
+function createNode(node, posOffset = 0) {
   //create Node
   const nodeDiv = document.createElement("div");
   nodeDiv.classList.add("node");
@@ -34,9 +34,9 @@ function createNode(node) {
   nodeDiv.append(addChild, deleteNode, changeParent, rename, name);
 
   // nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
-
-  nodeDiv.style.top = node.x * nodeWidth * 1.5 + 0.5 + "rem";
+  nodeDiv.style.top = (node.x + posOffset) * nodeWidth * 1.5 + 0.5 + "rem";
   nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
+
   //append to tree
   treeEl.appendChild(nodeDiv);
   //create lines
@@ -99,10 +99,6 @@ function addChild() {
   );
 }
 
-function deleteNodeFunc(...relatedIDs) {
-  relatedIDs.forEach(id => treeEl.removeChild(document.getElementById(id)));
-}
-
 //return node to its normal state
 function normalizeNode(node) {
   inputEl.removeEventListener("keypress", ifEnter);
@@ -142,9 +138,20 @@ function startOperation(node) {
 
 //create all nodes adn DOM them
 export function renderTreeHandler(handler) {
-  const nodes = handler();
+  const treeArray = handler();
+  //clear DOM
+  let maxLevelOfTree = 0,
+    treeOffset = 0;
   treeEl.textContent = "";
-  nodes.forEach(node => createNode(node));
+  treeArray.forEach(tree => {
+    tree.forEach(node => {
+      if (node.x > maxLevelOfTree) maxLevelOfTree = node.x;
+      createNode(node, treeOffset);
+    });
+    //next tree^s DOM y offset=maxLevelofTree
+    treeOffset += maxLevelOfTree + 1;
+    maxLevelOfTree = 0;
+  });
 }
 
 //operations at nodes rename,delete,change,add
@@ -189,7 +196,13 @@ export function treeOperationsHandler(handler) {
     //delete node
     const deleteNode = e.target.closest(".fa-trash");
     if (deleteNode) {
-      deleteNodeFunc(...handler("delete", node.id), node.id);
+      handler("delete", node.id);
+      return;
+    }
+    //delete node
+    const changeParent = e.target.closest(".fa-exchange-alt");
+    if (changeParent) {
+      console.log("ok");
       return;
     }
   });

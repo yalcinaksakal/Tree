@@ -239,7 +239,7 @@ p {
 /*line element*/
 .line {
   background-color: rgb(255, 25, 25);
-  height: 1px;
+  height: 2px;
 }
 
 /* input el */

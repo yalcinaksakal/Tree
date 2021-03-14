@@ -9,8 +9,12 @@ const uniqueId = (() => {
   const gen = uniqueIdGenerator();
   return () => gen.next().value;
 })();
+
 export let nodePosY = 0;
+export let treeArray = []; //Al trees created on DOM by user
+
 let nodesArray = [];
+
 class Tree {
   #children = new Map();
   #parent = null;
@@ -117,6 +121,11 @@ class Tree {
     return null;
   }
 
+  //transformig a node to a new tree
+  removeParent() {
+    this.#parent = null;
+  }
+
   removeChildNode(needle) {
     if (!this.hasChildNode(needle)) return;
     let removeNode;
@@ -127,10 +136,10 @@ class Tree {
       for (let child of this.children)
         if (child.name === needle || child.identifier === needle) {
           removeNode = child;
+          //just in case there is a varibale holding that node
+          removeNode.#parent = null;
           return this.#children.delete(child.identifier);
         }
-    //just in case there is a varibale holding that node
-    if (removeNode) removeNode.parentNode = null;
   }
 
   appendChildNode(node) {
@@ -196,36 +205,42 @@ class Tree {
   }
 }
 
-//demo tree
-export const treeTemplate = new Tree("Root");
-treeTemplate
-  .createChildNode("Level 1")
-  .parentNode.createChildNode("Level 1")
-  .parentNode.createChildNode("Level 1")
-  .parentNode.createChildNode("Level 1")
-  .parentNode.createChildNode("Level 1")
-  .createChildNode("Level 2")
-  .createChildNode("Level 3")
-  .parentNode.createChildNode("Level 3")
-  .createChildNode("Level 4")
-  .parentNode.parentNode.createChildNode("Level 3")
-  .createChildNode("Level 4")
-  .createChildNode("Level 5")
-  .createChildNode("Level 6")
-  .parentNode.createChildNode("Level 6")
-  .parentNode.createChildNode("Level 6")
-  .createChildNode("Level 7")
-  .parentNode.createChildNode("Level 7")
-  .parentNode.parentNode.createChildNode("Level 6")
-  .parentNode.createChildNode("Level 6")
-  .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
-    "Level 2"
-  )
-  .parentNode.createChildNode("Level 2")
-  .createChildNode("Level 3")
-  .parentNode.createChildNode("Level 3")
-  .parentNode.createChildNode("Level 3");
+const getSampleTree = () => {
+  const sampleTree = new Tree("Root");
+  sampleTree
+    .createChildNode("Level 1")
+    .parentNode.createChildNode("Level 1")
+    .parentNode.createChildNode("Level 1")
+    .parentNode.createChildNode("Level 1")
+    .parentNode.createChildNode("Level 1")
+    .createChildNode("Level 2")
+    .createChildNode("Level 3")
+    .parentNode.createChildNode("Level 3")
+    .createChildNode("Level 4")
+    .parentNode.parentNode.createChildNode("Level 3")
+    .createChildNode("Level 4")
+    .createChildNode("Level 5")
+    .createChildNode("Level 6")
+    .parentNode.createChildNode("Level 6")
+    .parentNode.createChildNode("Level 6")
+    .createChildNode("Level 7")
+    .parentNode.createChildNode("Level 7")
+    .parentNode.parentNode.createChildNode("Level 6")
+    .parentNode.createChildNode("Level 6")
+    .parentNode.parentNode.parentNode.parentNode.parentNode.createChildNode(
+      "Level 2"
+    )
+    .parentNode.createChildNode("Level 2")
+    .createChildNode("Level 3")
+    .parentNode.createChildNode("Level 3")
+    .parentNode.createChildNode("Level 3");
+  return sampleTree;
+};
 
+//demo tree
+export const treeInit = () => {
+  treeArray.push(getSampleTree());
+};
 // export default new Tree();
 /*
 
