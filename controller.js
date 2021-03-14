@@ -4,7 +4,7 @@ import * as treeModel from "./model/treeModel.js";
 import * as pageFunctionality from "./view/pageFuncitonalityView.js";
 
 const controlRenderTree = function () {
-  return treeModel.treeArray.map(tree =>
+  return Object.values(treeModel.treeArray).map(tree =>
     tree.createTreeToGraphPositionsAsNodesArray()
   );
 };
@@ -16,13 +16,13 @@ const controlTreeOperations = function (
   targetNodeId = null
 ) {
   let treeNode, targetNode;
-  for (let tree of treeModel.treeArray) {
+  for (let tree of Object.values(treeModel.treeArray)) {
     treeNode = tree.findNodeByID(+nodeId);
     if (treeNode) break;
   }
 
   if (targetNodeId)
-    for (let tree of treeModel.treeArray) {
+    for (let tree of Object.values(treeModel.treeArray)) {
       targetNode = tree.findNodeByID(+targetNodeId);
       if (targetNode) break;
     }
@@ -40,13 +40,15 @@ const controlTreeOperations = function (
       treeNode.children.forEach(child => {
         child.removeParent();
         //each child will become an independent tree
-        treeModel.treeArray.push(child);
+        treeModel.treeArray[child.identifier] = child;
       });
       treeView.renderTreeHandler(controlRenderTree); //update DOM
       break;
     case "changeParent":
       try {
         treeNode.parentNode = targetNode;
+        //if it was a treen, it is not now
+        delete treeModel.treeArray[treeNode.identifier];
         treeView.renderTreeHandler(controlRenderTree); //update DOM
       } catch (err) {
         throw err;

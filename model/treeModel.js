@@ -11,7 +11,7 @@ const uniqueId = (() => {
 })();
 
 export let nodePosY = 0;
-export let treeArray = []; //Al trees created on DOM by user
+export let treeArray = {}; //Al trees created on DOM by user
 
 let nodesArray = [];
 
@@ -246,7 +246,8 @@ const getSampleTree = () => {
 
 //demo tree
 export const treeInit = () => {
-  treeArray.push(getSampleTree());
+  const sampleTree = getSampleTree();
+  treeArray[sampleTree.identifier] = sampleTree;
 };
 // export default new Tree();
 /*
