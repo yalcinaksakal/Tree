@@ -160,6 +160,7 @@ class Tree {
   //find first occurance
   findNodeByName(name) {
     let foundNode = null;
+    if (this.name === name) return this;
     this.traverse(node => {
       if (node.name === name) {
         foundNode = node;
@@ -172,6 +173,7 @@ class Tree {
   //find by ID
   findNodeByID(ID) {
     let foundNode = null;
+    if (this.identifier === ID) return this;
     this.traverse(node => {
       if (node.identifier === ID) {
         foundNode = node;
@@ -184,6 +186,7 @@ class Tree {
   //find all occurances
   findAllNodeByName(name) {
     const children = [];
+    if (this.name === name) children.push(this);
     this.traverse(node => {
       if (node.name === name) {
         children.push(node);

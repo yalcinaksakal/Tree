@@ -6,6 +6,8 @@ import drawLine from "../helperFunctions.js";
 
 const treeEl = document.querySelector(".tree");
 const treeItemEl = document.querySelector(".tree-item");
+const scalableEl = document.querySelector(".scalable");
+const frameEl = document.querySelector(".square");
 const nodeWidth = 4; //nodes are 4rem
 
 function createNode(node) {
@@ -55,8 +57,33 @@ const ifEnter = e => {
   if (e.key === "Enter") submitInput();
 };
 
+const showFrame = (top, left) => {
+  frameEl.style.top = top.slice(0, -3) - 1 + "rem";
+  frameEl.style.left = left.slice(0, -3) - 1 + "rem";
+  frameEl.hidden = false;
+  setTimeout(() => (frameEl.hidden = true), 2000);
+};
+//scroll to a node
+function scrollTo(id) {
+  const { top, left } = document.getElementById(id).style;
+  const { width, height } = scalableEl.getBoundingClientRect();
+  const remToPx = parseFloat(
+    getComputedStyle(document.documentElement).fontSize
+  );
+  //rem string to number and center new element
+  scalableEl.scrollTo(
+    +left.slice(0, -3) * remToPx - width / 2,
+    +top.slice(0, -3) * remToPx - height / 2
+  );
+
+  //show frame to explixitly show child
+  showFrame(top, left);
+}
+
+///OPERATIONS
 //renamenode
 function renameNode(node) {
+  //change node name
   inputObject.func(inputObject.operation, inputObject.node, inputEl.value);
   //update node info
   node.setAttribute("title", `Name: ${inputEl.value}, ID: ${inputObject.node}`);
@@ -65,10 +92,21 @@ function renameNode(node) {
   node.childNodes[4].textContent = inputEl.value.slice(0, 7);
 }
 
+function addChild() {
+  //create  child and scroll to it
+  scrollTo(
+    inputObject.func(inputObject.operation, inputObject.node, inputEl.value)
+  );
+}
+
+function deleteNodeFunc(...relatedIDs) {
+  relatedIDs.forEach(id => treeEl.removeChild(document.getElementById(id)));
+}
+
 //return node to its normal state
 function normalizeNode(node) {
   inputEl.removeEventListener("keypress", ifEnter);
-  treeEl.removeChild(inputEl);
+  inputEl.parentElement?.removeChild(inputEl);
   inputEl.value = "";
   isInputing = false;
   node.style.background = "rgb(45, 138, 196)";
@@ -78,8 +116,17 @@ function normalizeNode(node) {
 function submitInput() {
   const nodeAtOperation = document.getElementById(inputObject.node);
   //renaming
-  if (inputObject.operation === "rename" && inputEl.value)
-    renameNode(nodeAtOperation);
+  if (inputEl.value) {
+    switch (inputObject.operation) {
+      case "rename":
+        renameNode(nodeAtOperation);
+        break;
+      case "addChild":
+        addChild();
+        break;
+    }
+    // if (inputObject.operation === "rename") renameNode(nodeAtOperation);
+  }
   //end operation return to normal state
   normalizeNode(nodeAtOperation);
 }
@@ -92,6 +139,7 @@ function startOperation(node) {
   inputEl.focus();
   inputEl.addEventListener("keypress", ifEnter);
 }
+
 //create all nodes adn DOM them
 export function renderTreeHandler(handler) {
   const nodes = handler();
@@ -99,6 +147,7 @@ export function renderTreeHandler(handler) {
   nodes.forEach(node => createNode(node));
 }
 
+//operations at nodes rename,delete,change,add
 export function treeOperationsHandler(handler) {
   treeItemEl.addEventListener("click", function (e) {
     e.preventDefault();
@@ -134,6 +183,13 @@ export function treeOperationsHandler(handler) {
         operation: "addChild",
       };
       startOperation(node);
+      return;
+    }
+
+    //delete node
+    const deleteNode = e.target.closest(".fa-trash");
+    if (deleteNode) {
+      deleteNodeFunc(...handler("delete", node.id), node.id);
       return;
     }
   });

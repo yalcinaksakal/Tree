@@ -54,10 +54,10 @@ body {
 }
 
 #bfs {
-  left: 15.5rem;
+  left: 17rem;
 }
 #dfs {
-  left: 20rem;
+  left: 22rem;
 }
 
 /* buttons */
@@ -156,7 +156,6 @@ body {
 /* nodes---------------------------------------- */
 .node {
   position: absolute;
-
   height: 4rem;
   width: 4rem;
   background: rgb(45, 138, 196);
@@ -186,7 +185,7 @@ p {
   right: 6rem;
 }
 .fa-search {
-  left: 13rem;
+  left: 14rem;
 }
 .fa-search,
 .fa-search-minus,
@@ -223,11 +222,11 @@ p {
 }
 .node:hover {
   transform: scale(1.1);
-  background: whitesmoke;
+  background: whitesmoke !important;
 }
 .node:hover > p {
   color: rgb(0, 0, 0);
-  font-size: 0.4rem;
+  font-size: 0.6rem;
   margin-top: 1.7rem;
 }
 .node:hover > .fas {
@@ -256,6 +255,16 @@ p {
   border: none;
   outline: none;
   padding: 0 0.5rem;
+}
+
+/* square */
+.square {
+  position: absolute;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background: none;
+  border: 3px solid red;
 }
 
 /* ---------------------------------------- */

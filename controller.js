@@ -13,10 +13,27 @@ const controlTreeOperations = function (
   newName = null,
   targetNodeId = null
 ) {
-  console.log(nodeId);
-  if (operation === "rename")
-    treeModel.treeTemplate.findNodeByID(+nodeId).name = newName;
-  console.log(treeModel.treeTemplate.print());
+  const treeNode = treeModel.treeTemplate.findNodeByID(+nodeId);
+  switch (operation) {
+    case "rename":
+      treeNode.name = newName;
+      break;
+    case "addChild":
+      //create and scroll to child
+      const childID = treeNode.createChildNode(newName).identifier;
+      treeView.renderTreeHandler(controlRenderTree);
+      return childID;
+    case "delete":
+      const relatedNodes = treeNode.children.map(
+        child => treeNode.identifier + "" + child.identifier
+      );
+      relatedNodes.push(
+        treeNode.parentNode.identifier + "" + treeNode.identifier
+      );
+      treeNode.parentNode.removeChildNode(treeNode);
+
+      return relatedNodes;
+  }
 };
 
 pageFunctionality.pageFunctionality();

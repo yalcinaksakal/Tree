@@ -4,8 +4,8 @@ const tree = document.querySelector(".tree");
 let scale = 1;
 
 function zoomTree(zoomValue) {
-  if (scale < 0.12 || scale > 2 || !zoomValue) scale = 1;
-  else scale += zoomValue;
+  if (scale < 0.03 || !zoomValue) scale = 1;
+  else scale += scale <= 0.11 ? zoomValue / 10 : zoomValue;
   tree.style.transform = `scale(${scale})`;
 }
 
