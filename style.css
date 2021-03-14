@@ -111,7 +111,6 @@ body {
 .tree {
   position: absolute;
   transform: scale(1);
-  transition: all ease 0.3s;
 }
 
 .save-load {

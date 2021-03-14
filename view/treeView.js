@@ -1,8 +1,8 @@
 // export function addHandler(handler) {
 //    XXXXXXX.addEventListener(Event, handler);
 //   }
-
-import drawLine from "../helperFunctions.js";
+import { zoomTree } from "../view/pageFuncitonalityView.js";
+import * as helperFunc from "../helperFunctions.js";
 
 const treeEl = document.querySelector(".tree");
 const treeItemEl = document.querySelector(".tree-item");
@@ -40,7 +40,8 @@ function createNode(node, posOffset = 0) {
   //append to tree
   treeEl.appendChild(nodeDiv);
   //create lines
-  if (node.parentId) drawLine(document.getElementById(node.parentId), nodeDiv);
+  if (node.parentId)
+    helperFunc.drawLine(document.getElementById(node.parentId), nodeDiv);
 }
 // -----------------------
 //renaming nodes, adding child
@@ -52,6 +53,8 @@ inputEl.classList.add("input-el");
 inputEl.style.zIndex = 10;
 
 let isInputing = false;
+let isSearchingParent = false;
+let parentSearchingNode;
 
 const ifEnter = e => {
   if (e.key === "Enter") submitInput();
@@ -64,7 +67,7 @@ const showFrame = (top, left) => {
   setTimeout(() => (frameEl.hidden = true), 2000);
 };
 //scroll to a node
-function scrollTo(id) {
+function scrollTo(id, isShowFrame = true) {
   const { top, left } = document.getElementById(id).style;
   const { width, height } = scalableEl.getBoundingClientRect();
   const remToPx = parseFloat(
@@ -77,9 +80,11 @@ function scrollTo(id) {
   );
 
   //show frame to explixitly show child
-  showFrame(top, left);
+  if (isShowFrame) showFrame(top, left);
 }
+function changePointerToChooseParent() {}
 
+// --------------------------------------------------
 ///OPERATIONS
 //renamenode
 function renameNode(node) {
@@ -99,6 +104,13 @@ function addChild() {
   );
 }
 
+function findNewParent(node) {
+  isSearchingParent = true;
+  parentSearchingNode.style.background = "#3DFEAE";
+  treeEl.addEventListener("mousemove", changePointerToChooseParent);
+}
+
+// --------------------------------------------------
 //return node to its normal state
 function normalizeNode(node) {
   inputEl.removeEventListener("keypress", ifEnter);
@@ -134,6 +146,9 @@ function startOperation(node) {
   treeEl.appendChild(inputEl);
   inputEl.focus();
   inputEl.addEventListener("keypress", ifEnter);
+  //scale page to 1:1
+  zoomTree(0);
+  scrollTo(node.id, false);
 }
 
 //create all nodes adn DOM them
@@ -165,6 +180,7 @@ export function treeOperationsHandler(handler) {
 
     //guard
     if (!node) return;
+
     //rename
     const rename = e.target.closest(".fa-quote-left");
     if (rename) {
@@ -190,6 +206,7 @@ export function treeOperationsHandler(handler) {
         operation: "addChild",
       };
       startOperation(node);
+
       return;
     }
 
@@ -199,10 +216,11 @@ export function treeOperationsHandler(handler) {
       handler("delete", node.id);
       return;
     }
-    //delete node
+    //change Parent;
     const changeParent = e.target.closest(".fa-exchange-alt");
     if (changeParent) {
-      console.log("ok");
+      parentSearchingNode = node;
+      handler("changeParent", node.id, findNewParent());
       return;
     }
   });
