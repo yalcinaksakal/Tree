@@ -51,10 +51,17 @@ class Tree {
       (newParent || newParent instanceof Tree)
     ) {
       //if it has parent node, we should remove this from parents childnodes
-      if (this.#parent) this.#parent.removeChildNode(this);
+      const oldParentNode = this.#parent;
+      if (oldParentNode) oldParentNode.removeChildNode(this);
       this.#parent = newParent;
       //if it has new parent we should append this as a child to new parent
-      newParent.appendChildNode(this);
+      try {
+        newParent.appendChildNode(this);
+      } catch (err) {
+        if (oldParentNode) oldParentNode.appendChildNode(this);
+        this.#parent = oldParentNode;
+        throw err;
+      }
     }
   }
   get childrenCount() {

@@ -21,7 +21,7 @@ export function drawLine(start, end) {
   //bring all the work together
   const line = document.createElement("div");
   line.classList.add("line");
-  line.setAttribute("id", `${start.id}temp`);
+  line.setAttribute("id", `Line${end.id}`);
 
   line.style.position = "absolute";
 

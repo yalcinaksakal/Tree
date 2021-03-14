@@ -15,11 +15,17 @@ const controlTreeOperations = function (
   newName = null,
   targetNodeId = null
 ) {
-  let treeNode;
+  let treeNode, targetNode;
   for (let tree of treeModel.treeArray) {
     treeNode = tree.findNodeByID(+nodeId);
     if (treeNode) break;
   }
+
+  if (targetNodeId)
+    for (let tree of treeModel.treeArray) {
+      targetNode = tree.findNodeByID(+targetNodeId);
+      if (targetNode) break;
+    }
   switch (operation) {
     case "rename":
       treeNode.name = newName;
@@ -30,25 +36,21 @@ const controlTreeOperations = function (
       treeView.renderTreeHandler(controlRenderTree);
       return childID;
     case "delete":
-      // const relatedNodes = treeNode.children.map(child => {
-      //   //each child will become an independent tree
-      //   treeModel.treeArray.push(child);
-      //   return treeNode.identifier + "" + child.identifier;
-      // });
-      // relatedNodes.push(
-      //   treeNode.parentNode.identifier + "" + treeNode.identifier
-      // );
-      // treeNode.parentNode.removeChildNode(treeNode); //treeModel handles removing node from gradnchilds parent
-
-      // return relatedNodes;
       treeNode.parentNode.removeChildNode(treeNode); //treeModel handles removing node from gradnchilds parent
       treeNode.children.forEach(child => {
         child.removeParent();
         //each child will become an independent tree
         treeModel.treeArray.push(child);
       });
-
       treeView.renderTreeHandler(controlRenderTree); //update DOM
+      break;
+    case "changeParent":
+      try {
+        treeNode.parentNode = targetNode;
+        treeView.renderTreeHandler(controlRenderTree); //update DOM
+      } catch (err) {
+        throw err;
+      }
       break;
   }
 };

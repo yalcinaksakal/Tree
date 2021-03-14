@@ -82,7 +82,14 @@ function scrollTo(id, isShowFrame = true) {
   //show frame to explixitly show child
   if (isShowFrame) showFrame(top, left);
 }
-function changePointerToChooseParent() {}
+function showErr(msg) {
+  inputEl.value = msg;
+  inputEl.style.width = "21rem";
+  inputEl.style.color = "red";
+  startOperation(parentSearchingNode);
+  //show err for 2secs
+  setTimeout(() => normalizeNode(parentSearchingNode), 2000);
+}
 
 // --------------------------------------------------
 ///OPERATIONS
@@ -104,10 +111,26 @@ function addChild() {
   );
 }
 
-function findNewParent(node) {
+function setNewParent(func, parentNode) {
+  isSearchingParent = false;
+  //normalize parent searching node
+  treeItemEl.style.cursor = "default";
+  parentSearchingNode.style.background = "rgb(45, 138, 196)";
+  //change parent
+  if (parentNode)
+    try {
+      func("changeParent", parentSearchingNode.id, null, parentNode.id);
+      zoomTree(0);
+      scrollTo(parentSearchingNode.id);
+    } catch (err) {
+      showErr(err.message);
+    }
+}
+
+function findNewParent() {
   isSearchingParent = true;
   parentSearchingNode.style.background = "#3DFEAE";
-  treeEl.addEventListener("mousemove", changePointerToChooseParent);
+  treeItemEl.style.cursor = "copy";
 }
 
 // --------------------------------------------------
@@ -115,6 +138,8 @@ function findNewParent(node) {
 function normalizeNode(node) {
   inputEl.removeEventListener("keypress", ifEnter);
   inputEl.parentElement?.removeChild(inputEl);
+  inputEl.style.width = "7rem";
+  inputEl.style.color = "white";
   inputEl.value = "";
   isInputing = false;
   node.style.background = "rgb(45, 138, 196)";
@@ -178,8 +203,15 @@ export function treeOperationsHandler(handler) {
     //if inputting count this click as submit
     if (isInputing && !e.target.closest(".input-el")) submitInput();
 
-    //guard
-    if (!node) return;
+    //if searching new parent
+    if (isSearchingParent) {
+      setNewParent(handler, node);
+      return;
+    }
+
+    if (!node)
+      //guard
+      return;
 
     //rename
     const rename = e.target.closest(".fa-quote-left");
@@ -220,7 +252,7 @@ export function treeOperationsHandler(handler) {
     const changeParent = e.target.closest(".fa-exchange-alt");
     if (changeParent) {
       parentSearchingNode = node;
-      handler("changeParent", node.id, findNewParent());
+      findNewParent();
       return;
     }
   });
