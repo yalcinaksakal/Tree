@@ -48,7 +48,9 @@ const controlTreeOperations = function (
       treeView.renderTreeHandler(controlRenderTree);
       return childID;
     case "delete":
-      treeNode.parentNode.removeChildNode(treeNode); //treeModel handles removing node from gradnchilds parent
+      if (!treeNode.parentNode) delete treeModel.treeArray[treeNode.identifier];
+      else treeNode.parentNode.removeChildNode(treeNode); //treeModel handles removing node from gradnchilds parent
+
       treeNode.children.forEach(child => {
         child.removeParent();
         //each child will become an independent tree

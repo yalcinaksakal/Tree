@@ -143,10 +143,10 @@ class Tree {
       for (let child of this.children)
         if (child.name === needle || child.identifier === needle) {
           removeNode = child;
-          //just in case there is a varibale holding that node
-          removeNode.#parent = null;
           return this.#children.delete(child.identifier);
         }
+    //just in case there is a varibale holding that node
+    removeNode.#parent = null;
   }
 
   appendChildNode(node) {
