@@ -208,7 +208,7 @@ export function renderTreeHandler(handler) {
 function startSearch(searcherFunc) {
   if (isAnimating) {
     navSearchEl.value = "";
-    navSearchEl.placeholder = "Amimating, Please wait";
+    navSearchEl.placeholder = "Animating, please wait";
     return;
   }
   const searchResult = searcherFunc("search", navSearchEl.value);
@@ -241,7 +241,8 @@ function normalizeTree() {
   document.querySelector(".dfs").classList.remove("selected");
   isAnimating = false;
   treeItemEl.style.pointerEvents = "auto";
-  navSearchEl.placeholder = "Ready to search";
+  if (navSearchEl.placeholder === "Animating, please wait")
+    navSearchEl.placeholder = "Ready to search";
 }
 function animateDfs(index = 0) {
   if (animationArray[index]) {
