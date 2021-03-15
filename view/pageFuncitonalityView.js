@@ -1,12 +1,19 @@
 const nav = document.querySelector(".nav");
 const tree = document.querySelector(".tree");
+const scalableEl = document.querySelector(".scalable");
 
 let scale = 1;
 
 export function zoomTree(zoomValue) {
-  if (scale < 0.03 || !zoomValue) scale = 1;
-  else scale += scale <= 0.11 ? zoomValue / 10 : zoomValue;
-  tree.style.transform = `scale(${scale})`;
+  if (scale < 0.05 || !zoomValue) {
+    tree.style.transform = `scale(1)`;
+    scale = Math.min(
+      scalableEl.getBoundingClientRect().width / scalableEl.scrollWidth,
+      scalableEl.getBoundingClientRect().height / scalableEl.scrollHeight
+    );
+  } else scale += scale <= 0.11 ? zoomValue / 10 : zoomValue;
+  if (zoomValue === 1) scale = 1.03;
+  tree.style.transform = `scale(${scale - 0.03})`;
 }
 
 function navFunctionality(e) {

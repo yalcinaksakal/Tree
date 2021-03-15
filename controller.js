@@ -59,7 +59,7 @@ const controlTreeOperations = function (
     case "changeParent":
       try {
         treeNode.parentNode = targetNode;
-        //if it was a treen, it is not now
+        //if it was a tree, it is not now
         delete treeModel.treeArray[treeNode.identifier];
         treeView.renderTreeHandler(controlRenderTree); //update DOM
       } catch (err) {

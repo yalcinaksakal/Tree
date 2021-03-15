@@ -10,9 +10,12 @@ const scalableEl = document.querySelector(".scalable");
 const frameEl = document.querySelector(".square");
 const nav = document.querySelector(".nav");
 const navSearchEl = document.getElementById("tree-search");
-const searchIcon = document.querySelector(".fa-search");
 
 const nodeWidth = 4; //nodes are 4rem
+
+export const remToPx = parseFloat(
+  getComputedStyle(document.documentElement).fontSize
+);
 
 // -----------------------
 //renaming nodes, adding child
@@ -65,27 +68,21 @@ const ifEnter = e => {
   if (e.key === "Enter") submitInput();
 };
 
-const showFrame = (top, left) => {
-  frameEl.style.top = top.slice(0, -3) - 1 + "rem";
-  frameEl.style.left = left.slice(0, -3) - 1 + "rem";
-  frameEl.hidden = false;
-  setTimeout(() => (frameEl.hidden = true), 2000);
+const showEl = elId => {
+  const el = document.getElementById(elId);
+  el.style.background = "red";
+  setTimeout(() => (el.style.background = "rgb(45, 138, 196)"), 2000);
 };
 //scroll to a node
-function scrollTo(id, isShowFrame = true) {
+function scrollTo(id) {
   const { top, left } = document.getElementById(id).style;
   const { width, height } = scalableEl.getBoundingClientRect();
-  const remToPx = parseFloat(
-    getComputedStyle(document.documentElement).fontSize
-  );
+
   //rem string to number and center new element
   scalableEl.scrollTo(
     +left.slice(0, -3) * remToPx - width / 2,
     +top.slice(0, -3) * remToPx - height / 2
   );
-
-  //show frame to explixitly show child
-  if (isShowFrame) showFrame(top, left);
 }
 function showErr(msg) {
   inputEl.value = msg;
@@ -110,10 +107,11 @@ function renameNode(node) {
 }
 
 function addChild() {
-  //create  child and scroll to it
-  scrollTo(
+  //create  child and get it
+  const childNode = document.getElementById(
     inputObject.func(inputObject.operation, inputObject.node, inputEl.value)
   );
+  showEl(childNode.id);
 }
 
 function setNewParent(func, parentNode) {
@@ -125,8 +123,7 @@ function setNewParent(func, parentNode) {
   if (parentNode)
     try {
       func("changeParent", parentSearchingNode.id, null, parentNode.id);
-      zoomTree(0);
-      scrollTo(parentSearchingNode.id);
+      showEl(parentSearchingNode.id);
     } catch (err) {
       showErr(err.message);
     }
@@ -177,12 +174,13 @@ function startOperation(node) {
   inputEl.focus();
   inputEl.addEventListener("keypress", ifEnter);
   //scale page to 1:1
-  zoomTree(0);
-  scrollTo(node.id, false);
+  zoomTree(1);
+  scrollTo(node.id);
 }
 
 //create all nodes adn DOM them
 export function renderTreeHandler(handler) {
+  zoomTree(1);
   const treeArray = handler();
   //clear DOM
   let maxLevelOfTree = 0,
@@ -197,6 +195,7 @@ export function renderTreeHandler(handler) {
     treeOffset += maxLevelOfTree + 1;
     maxLevelOfTree = 0;
   });
+  zoomTree(0);
 }
 // --------------------------------------------------
 // nav
@@ -205,14 +204,9 @@ function startSearch(searcherFunc) {
   const searchResult = searcherFunc("search", navSearchEl.value);
   navSearchEl.placeholder = `Found: (${searchResult.length}) ${navSearchEl.value}`;
   navSearchEl.value = "";
-  //scale to full view---------------------------------------
+  //scale to full view---------------------------------------we are here /deleting roots error
   //show all founds
-  console.log(
-    scalableEl.scrollWidth / scalableEl.getBoundingClientRect().width
-  );
-  console.log(
-    scalableEl.scrollHeight / scalableEl.getBoundingClientRect().height
-  );
+  zoomTree(0);
 }
 
 // --------------------------------------------------
@@ -294,13 +288,5 @@ export function treeOperationsHandler(handler) {
       navSearchEl.focus();
       return;
     }
-    //search
-    // const navEl = e.target.closest(".search-container");
-    // if (navEl) {
-    //   isNavSearcing = true;
-    //   searcherFunc = handler;
-    //   navSearch();
-    //   return;
-    // }
   });
 }
