@@ -45,7 +45,7 @@ body {
   width: auto;
   height: 2rem;
   border-radius: 10px;
-  transition: all ease 0.3s;
+
   font-weight: 300;
   user-select: none;
   outline: none;
@@ -53,10 +53,10 @@ body {
   box-shadow: 0 1px 5px 1px rgba(0, 0, 0, 0.421);
 }
 
-#bfs {
+.bfs {
   left: 17rem;
 }
-#dfs {
+.dfs {
   left: 22rem;
 }
 
@@ -68,7 +68,6 @@ body {
 }
 .algorithm:hover {
   filter: brightness(1.5);
-  transform: scale(1.1);
 }
 
 /* scale */
@@ -256,16 +255,6 @@ p {
   padding: 0 0.5rem;
 }
 
-/* square */
-.square {
-  position: absolute;
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  background: none;
-  border: 3px solid red;
-}
-
 /* ---------------------------------------- */
 
 /* scroll bar */
@@ -299,10 +288,10 @@ p {
     border-radius: 5px;
   }
 
-  #bfs {
+  .bfs {
     left: 11.4rem;
   }
-  #dfs {
+  .dfs {
     left: 15.5rem;
   }
   .save-load {
@@ -349,10 +338,10 @@ p {
     font-size: 0.6rem;
   }
 
-  #bfs {
+  .bfs {
     left: 11.2rem;
   }
-  #dfs {
+  .dfs {
     left: 13.5rem;
   }
 }

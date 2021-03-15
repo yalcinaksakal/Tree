@@ -12,7 +12,7 @@ const uniqueId = (() => {
 
 export let nodePosY = 0;
 export let treeArray = {}; //Al trees created on DOM by user
-
+export let arrayDFS = [];
 let nodesArray = [];
 
 class Tree {
@@ -167,6 +167,19 @@ class Tree {
   print() {
     return `${this.name}${this.#getTreeString(this, 2)}`;
   }
+
+  #getDfsSeq(node) {
+    node.children.forEach(child => {
+      arrayDFS.push({ id: child.identifier, type: "visit" });
+      this.#getDfsSeq(child);
+      arrayDFS.push({ id: child.identifier, type: "leave" });
+    });
+  }
+  dfsSequence() {
+    arrayDFS.push({ id: this.identifier, type: "visit" });
+    this.#getDfsSeq(this);
+    arrayDFS.push({ id: this.identifier, type: "leave" });
+  }
   //traverse all leaves of "this" and run cb function, Depth first search
   traverse(callBackFunc) {
     for (let child of this.children)
@@ -249,6 +262,8 @@ export const treeInit = () => {
   const sampleTree = getSampleTree();
   treeArray[sampleTree.identifier] = sampleTree;
 };
+
+
 // export default new Tree();
 /*
 

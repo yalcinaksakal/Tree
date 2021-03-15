@@ -18,28 +18,64 @@ function findNodeById(id) {
   return false;
 }
 
+function search(id) {
+  //check if user is searching by id
+  let searchResult = findNodeById(+id);
+  if (searchResult) return [searchResult];
+  searchResult = [];
+  // else search by name
+  for (let tree of Object.values(treeModel.treeArray)) {
+    searchResult.push(...tree.findAllNodeByName(id));
+  }
+  //normalize view (clear earlier search results)
+  treeView.renderTreeHandler(controlRenderTree);
+  return searchResult;
+}
+
+function deleteNode(treeNode) {
+  if (!treeNode.parentNode) delete treeModel.treeArray[treeNode.identifier];
+  else treeNode.parentNode.removeChildNode(treeNode); //treeModel handles removing node from gradnchilds parent
+
+  treeNode.children.forEach(child => {
+    child.removeParent();
+    //each child will become an independent tree
+    treeModel.treeArray[child.identifier] = child;
+  });
+  treeView.renderTreeHandler(controlRenderTree); //update DOM
+}
+
+function changeParent(treeNode, targetNodeId) {
+  try {
+    const targetNode = findNodeById(targetNodeId);
+    treeNode.parentNode = targetNode;
+    //if it was a tree, it is not now
+    delete treeModel.treeArray[treeNode.identifier];
+    treeView.renderTreeHandler(controlRenderTree); //update DOM
+  } catch (err) {
+    throw err;
+  }
+}
+
+function startDFS() {
+  //empty animation array
+  treeModel.arrayDFS.length = 0;
+  //for each tree create animation arr
+  for (let tree of Object.values(treeModel.treeArray)) tree.dfsSequence();
+  return treeModel.arrayDFS;
+}
+
 const controlTreeOperations = function (
   operation,
   nodeId,
   newName = null,
   targetNodeId = null
 ) {
-  if (operation === "search") {
-    //check if user is searching by id
-    let searchResult = findNodeById(+nodeId);
-    if (searchResult) return [searchResult];
-    searchResult = [];
-    // else search by name
-    for (let tree of Object.values(treeModel.treeArray)) {
-      searchResult.push(...tree.findAllNodeByName(nodeId));
-    }
-    //normalize view (clear earlier search results)
-    treeView.renderTreeHandler(controlRenderTree);
-    return searchResult;
-  }
   const treeNode = findNodeById(+nodeId);
-  const targetNode = findNodeById(+targetNodeId);
   switch (operation) {
+    case "dfs":
+      return startDFS();
+    case "search":
+      return search(nodeId);
     case "rename":
       treeNode.name = newName;
       break;
@@ -49,25 +85,10 @@ const controlTreeOperations = function (
       treeView.renderTreeHandler(controlRenderTree);
       return childID;
     case "delete":
-      if (!treeNode.parentNode) delete treeModel.treeArray[treeNode.identifier];
-      else treeNode.parentNode.removeChildNode(treeNode); //treeModel handles removing node from gradnchilds parent
-
-      treeNode.children.forEach(child => {
-        child.removeParent();
-        //each child will become an independent tree
-        treeModel.treeArray[child.identifier] = child;
-      });
-      treeView.renderTreeHandler(controlRenderTree); //update DOM
+      deleteNode(treeNode);
       break;
     case "changeParent":
-      try {
-        treeNode.parentNode = targetNode;
-        //if it was a tree, it is not now
-        delete treeModel.treeArray[treeNode.identifier];
-        treeView.renderTreeHandler(controlRenderTree); //update DOM
-      } catch (err) {
-        throw err;
-      }
+      changeParent(treeNode, +targetNodeId);
       break;
   }
 };

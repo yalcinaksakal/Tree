@@ -3,11 +3,11 @@
 //   }
 import { zoomTree } from "../view/pageFuncitonalityView.js";
 import * as helperFunc from "../helperFunctions.js";
+import { arrayDFS } from "../model/treeModel.js";
 
 const treeEl = document.querySelector(".tree");
 const treeItemEl = document.querySelector(".tree-item");
 const scalableEl = document.querySelector(".scalable");
-const frameEl = document.querySelector(".square");
 const nav = document.querySelector(".nav");
 const navSearchEl = document.getElementById("tree-search");
 
@@ -28,7 +28,11 @@ inputEl.style.zIndex = 10;
 
 let isInputing = false;
 let isSearchingParent = false;
+let isAnimating = false;
 let parentSearchingNode;
+
+let animationArray = [];
+const animationDuration = 350; //msec
 
 function createNode(node, posOffset = 0) {
   //create Node
@@ -54,8 +58,8 @@ function createNode(node, posOffset = 0) {
   nodeDiv.append(addChild, deleteNode, changeParent, rename, name);
 
   // nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
-  nodeDiv.style.top = (node.x + posOffset) * nodeWidth * 1.5 + 0.5 + "rem";
-  nodeDiv.style.left = node.y * nodeWidth * 1.5 + 0.5 + "rem";
+  nodeDiv.style.top = (node.x + posOffset) * nodeWidth * 1.7 + 2 + "rem";
+  nodeDiv.style.left = node.y * nodeWidth * 1.5 + 2 + "rem";
 
   //append to tree
   treeEl.appendChild(nodeDiv);
@@ -182,6 +186,7 @@ function startOperation(node) {
 export function renderTreeHandler(handler) {
   zoomTree(1);
   const treeArray = handler();
+
   //clear DOM
   let maxLevelOfTree = 0,
     treeOffset = 0;
@@ -201,6 +206,11 @@ export function renderTreeHandler(handler) {
 // nav
 
 function startSearch(searcherFunc) {
+  if (isAnimating) {
+    navSearchEl.value = "";
+    navSearchEl.placeholder = "Amimating, Please wait";
+    return;
+  }
   const searchResult = searcherFunc("search", navSearchEl.value);
   navSearchEl.placeholder = `Found: (${searchResult.length}) ${navSearchEl.value}`;
   navSearchEl.value = "";
@@ -212,6 +222,35 @@ function startSearch(searcherFunc) {
   });
 }
 
+function changeStyleOfNode(style) {
+  const node = document.getElementById(style.id);
+  if (style.type === "visit") {
+    node.style.background = "yellow";
+    node.style.transform = "scale(1.5)";
+  } else {
+    node.style.background = "black";
+    node.style.transform = "scale(1)";
+  }
+}
+
+function normalizeTree() {
+  animationArray.forEach(style => {
+    const node = document.getElementById(style.id);
+    node.style.background = "rgb(45, 138, 196)";
+  });
+  document.querySelector(".dfs").classList.remove("selected");
+  isAnimating = false;
+  treeItemEl.style.pointerEvents = "auto";
+  navSearchEl.placeholder = "Ready to search";
+}
+function animateDfs(index = 0) {
+  if (animationArray[index]) {
+    changeStyleOfNode(animationArray[index]);
+    setTimeout(() => animateDfs(index + 1), animationDuration);
+  } else {
+    setTimeout(() => normalizeTree(), animationDuration);
+  }
+}
 // --------------------------------------------------
 
 //operations at nodes rename,delete,change,add and nav funcionality
@@ -289,6 +328,18 @@ export function treeOperationsHandler(handler) {
     if (searchIcon) {
       startSearch(handler);
       navSearchEl.focus();
+      return;
+    }
+
+    const dfs = e.target.closest(".dfs");
+    if (dfs) {
+      zoomTree(0);
+      isAnimating = true;
+      dfs.classList.add("selected");
+      animationArray = handler("dfs");
+      treeItemEl.style.pointerEvents = "none";
+
+      animateDfs();
       return;
     }
   });
