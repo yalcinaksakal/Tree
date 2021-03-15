@@ -9,23 +9,35 @@ const controlRenderTree = function () {
   );
 };
 
+function findNodeById(id) {
+  let node;
+  for (let tree of Object.values(treeModel.treeArray)) {
+    node = tree.findNodeByID(+id);
+    if (node) return node;
+  }
+  return false;
+}
+
 const controlTreeOperations = function (
   operation,
   nodeId,
   newName = null,
   targetNodeId = null
 ) {
-  let treeNode, targetNode;
-  for (let tree of Object.values(treeModel.treeArray)) {
-    treeNode = tree.findNodeByID(+nodeId);
-    if (treeNode) break;
-  }
-
-  if (targetNodeId)
+  if (operation === "search") {
+    //check if user is searching by id
+    let searchResult = findNodeById(+nodeId);
+    if (searchResult) return [searchResult];
+    searchResult = [];
+    // else search by name
     for (let tree of Object.values(treeModel.treeArray)) {
-      targetNode = tree.findNodeByID(+targetNodeId);
-      if (targetNode) break;
+      searchResult.push(...tree.findAllNodeByName(nodeId));
     }
+
+    return searchResult;
+  }
+  const treeNode = findNodeById(+nodeId);
+  const targetNode = findNodeById(+targetNodeId);
   switch (operation) {
     case "rename":
       treeNode.name = newName;

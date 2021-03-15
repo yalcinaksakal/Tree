@@ -200,12 +200,11 @@ class Tree {
   }
 
   //find all occurances
-  findAllNodeByName(nameOrId) {
+  findAllNodeByName(name) {
     const children = [];
-    if (this.name === nameOrId || this.identifier === nameOrId)
-      children.push(this.identifier);
+    if (this.name === name) children.push(this.identifier);
     this.traverse(node => {
-      if (node.name === nameOrId || node.identifier === nameOrId) {
+      if (node.name === name) {
         children.push(node.identifier);
       }
     });

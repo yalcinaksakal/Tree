@@ -25,7 +25,6 @@ inputEl.style.zIndex = 10;
 
 let isInputing = false;
 let isSearchingParent = false;
-let isNavSearcing = false;
 let parentSearchingNode;
 
 function createNode(node, posOffset = 0) {
@@ -201,19 +200,13 @@ export function renderTreeHandler(handler) {
 }
 // --------------------------------------------------
 // nav
-const ifEnterNav = e => {
-  if (e.key === "Enter") startSearch();
-};
 
-function startSearch() {
-  console.log(navSearchEl.value);
-  /////////////////////////////////continue here
-  ///
-  isNavSearcing = false;
-  navSearchEl.removeEventListener("keypress", ifEnterNav);
-}
-function navSearch() {
-  navSearchEl.addEventListener("keypress", ifEnterNav);
+function startSearch(searcherFunc) {
+  const searchResult = searcherFunc("search", navSearchEl.value);
+  navSearchEl.placeholder = `Found: (${searchResult.length}) ${navSearchEl.value}`;
+  navSearchEl.value = "";
+  //scale to full view
+  //show all founds
 }
 
 // --------------------------------------------------
@@ -224,12 +217,6 @@ export function treeOperationsHandler(handler) {
   treeItemEl.addEventListener("click", function (e) {
     e.preventDefault();
     const node = e.target.closest(".node");
-
-    //if nav panel search input was active and treeitem is clicked, assume user wants search to start
-    if (isNavSearcing) {
-      startSearch();
-      return;
-    }
 
     //if inputting count this click as submit
     if (isInputing && !e.target.closest(".input-el")) submitInput();
@@ -290,20 +277,24 @@ export function treeOperationsHandler(handler) {
   });
 
   //nav functionality
+  navSearchEl.addEventListener("keypress", e => {
+    if (e.key === "Enter") startSearch(handler);
+  });
   nav.addEventListener("click", e => {
     const searchIcon = e.target.closest(".fa-search");
 
     if (searchIcon) {
-      isNavSearcing ? startSearch() : navSearchEl.focus();
-
+      startSearch(handler);
+      navSearchEl.focus();
       return;
     }
     //search
-    const navEl = e.target.closest(".search-container");
-    if (navEl) {
-      isNavSearcing = true;
-      navSearch();
-      return;
-    }
+    // const navEl = e.target.closest(".search-container");
+    // if (navEl) {
+    //   isNavSearcing = true;
+    //   searcherFunc = handler;
+    //   navSearch();
+    //   return;
+    // }
   });
 }
