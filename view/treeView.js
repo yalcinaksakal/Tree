@@ -205,8 +205,14 @@ function startSearch(searcherFunc) {
   const searchResult = searcherFunc("search", navSearchEl.value);
   navSearchEl.placeholder = `Found: (${searchResult.length}) ${navSearchEl.value}`;
   navSearchEl.value = "";
-  //scale to full view
+  //scale to full view---------------------------------------
   //show all founds
+  console.log(
+    scalableEl.scrollWidth / scalableEl.getBoundingClientRect().width
+  );
+  console.log(
+    scalableEl.scrollHeight / scalableEl.getBoundingClientRect().height
+  );
 }
 
 // --------------------------------------------------
