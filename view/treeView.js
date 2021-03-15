@@ -8,7 +8,25 @@ const treeEl = document.querySelector(".tree");
 const treeItemEl = document.querySelector(".tree-item");
 const scalableEl = document.querySelector(".scalable");
 const frameEl = document.querySelector(".square");
+const nav = document.querySelector(".nav");
+const navSearchEl = document.getElementById("tree-search");
+const searchIcon = document.querySelector(".fa-search");
+
 const nodeWidth = 4; //nodes are 4rem
+
+// -----------------------
+//renaming nodes, adding child
+let inputObject = {};
+
+///dynamic input el
+const inputEl = document.createElement("input");
+inputEl.classList.add("input-el");
+inputEl.style.zIndex = 10;
+
+let isInputing = false;
+let isSearchingParent = false;
+let isNavSearcing = false;
+let parentSearchingNode;
 
 function createNode(node, posOffset = 0) {
   //create Node
@@ -43,18 +61,6 @@ function createNode(node, posOffset = 0) {
   if (node.parentId)
     helperFunc.drawLine(document.getElementById(node.parentId), nodeDiv);
 }
-// -----------------------
-//renaming nodes, adding child
-let inputObject = {};
-
-///dynamic input el
-const inputEl = document.createElement("input");
-inputEl.classList.add("input-el");
-inputEl.style.zIndex = 10;
-
-let isInputing = false;
-let isSearchingParent = false;
-let parentSearchingNode;
 
 const ifEnter = e => {
   if (e.key === "Enter") submitInput();
@@ -193,12 +199,37 @@ export function renderTreeHandler(handler) {
     maxLevelOfTree = 0;
   });
 }
+// --------------------------------------------------
+// nav
+const ifEnterNav = e => {
+  if (e.key === "Enter") startSearch();
+};
 
-//operations at nodes rename,delete,change,add
+function startSearch() {
+  console.log(navSearchEl.value);
+  /////////////////////////////////continue here
+  ///
+  isNavSearcing = false;
+  navSearchEl.removeEventListener("keypress", ifEnterNav);
+}
+function navSearch() {
+  navSearchEl.addEventListener("keypress", ifEnterNav);
+}
+
+// --------------------------------------------------
+
+//operations at nodes rename,delete,change,add and nav funcionality
 export function treeOperationsHandler(handler) {
+  //tree board functionality
   treeItemEl.addEventListener("click", function (e) {
     e.preventDefault();
     const node = e.target.closest(".node");
+
+    //if nav panel search input was active and treeitem is clicked, assume user wants search to start
+    if (isNavSearcing) {
+      startSearch();
+      return;
+    }
 
     //if inputting count this click as submit
     if (isInputing && !e.target.closest(".input-el")) submitInput();
@@ -253,6 +284,25 @@ export function treeOperationsHandler(handler) {
     if (changeParent) {
       parentSearchingNode = node;
       findNewParent();
+      return;
+    }
+    //load save clean new-tree
+  });
+
+  //nav functionality
+  nav.addEventListener("click", e => {
+    const searchIcon = e.target.closest(".fa-search");
+
+    if (searchIcon) {
+      isNavSearcing ? startSearch() : navSearchEl.focus();
+
+      return;
+    }
+    //search
+    const navEl = e.target.closest(".search-container");
+    if (navEl) {
+      isNavSearcing = true;
+      navSearch();
       return;
     }
   });
