@@ -33,7 +33,8 @@ const controlTreeOperations = function (
     for (let tree of Object.values(treeModel.treeArray)) {
       searchResult.push(...tree.findAllNodeByName(nodeId));
     }
-
+    //normalize view (clear earlier search results)
+    treeView.renderTreeHandler(controlRenderTree);
     return searchResult;
   }
   const treeNode = findNodeById(+nodeId);

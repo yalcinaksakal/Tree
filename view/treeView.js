@@ -204,9 +204,12 @@ function startSearch(searcherFunc) {
   const searchResult = searcherFunc("search", navSearchEl.value);
   navSearchEl.placeholder = `Found: (${searchResult.length}) ${navSearchEl.value}`;
   navSearchEl.value = "";
-  //scale to full view---------------------------------------we are here /deleting roots error
   //show all founds
   zoomTree(0);
+  searchResult.forEach(nodeID => {
+    const node = document.getElementById(nodeID);
+    node.style.background = "red";
+  });
 }
 
 // --------------------------------------------------
