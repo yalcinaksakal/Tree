@@ -305,6 +305,24 @@ p {
   #dfs {
     left: 15.5rem;
   }
+  .save-load {
+    right: 1.5rem;
+    width: 6.7rem;
+    height: 2rem;
+  }
+  .save-load .fas {
+    font-size: 1.2rem;
+  }
+
+  .fa-download {
+    right: 2rem;
+  }
+  .fa-broom {
+    right: 3.3rem;
+  }
+  .fa-plus-square {
+    right: 5.2rem;
+  }
 
   .fa-search-plus,
   .fa-search,
