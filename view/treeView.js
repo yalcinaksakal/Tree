@@ -10,6 +10,8 @@ const scalableEl = document.querySelector(".scalable");
 const nav = document.querySelector(".nav");
 const navSearchEl = document.getElementById("tree-search");
 const saveLoadEl = document.querySelector(".save-load");
+const saveMsgEl = document.querySelector(".saved");
+
 const nodeWidth = 4; //nodes are 4rem
 
 export const remToPx = parseFloat(
@@ -31,7 +33,7 @@ let isAnimating = false;
 let parentSearchingNode;
 
 let animationArray = [];
-const animationDuration = 350; //msec
+const animationDuration = 250; //msec
 
 function createNode(node, posOffset = 0) {
   //create Node
@@ -67,6 +69,26 @@ function createNode(node, posOffset = 0) {
     helperFunc.drawLine(document.getElementById(node.parentId), nodeDiv);
 }
 
+//create all nodes adn DOM them
+export function renderTreeHandler(handler) {
+  zoomTree(1);
+  const treeArray = handler();
+  //clear DOM
+  let maxLevelOfTree = 0,
+    treeOffset = 0;
+  treeEl.textContent = "";
+  treeArray.forEach(tree => {
+    tree.forEach(node => {
+      if (node.x > maxLevelOfTree) maxLevelOfTree = node.x;
+      createNode(node, treeOffset);
+    });
+    //next tree^s DOM y offset=maxLevelofTree
+    treeOffset += maxLevelOfTree + 1;
+    maxLevelOfTree = 0;
+  });
+  zoomTree(0);
+}
+// -----------------------------------
 const ifEnter = e => {
   if (e.key === "Enter") submitInput();
 };
@@ -96,6 +118,10 @@ function showErr(msg) {
   setTimeout(() => normalizeNode(parentSearchingNode), 2000);
 }
 
+function showSaveMsg() {
+  saveMsgEl.hidden = false;
+  setTimeout(() => (saveMsgEl.hidden = true), 1000);
+}
 // --------------------------------------------------
 ///OPERATIONS
 //renamenode
@@ -194,27 +220,6 @@ function startOperation(node) {
   if (node.id) scrollTo(node.id);
 }
 
-//create all nodes adn DOM them
-export function renderTreeHandler(handler) {
-  zoomTree(1);
-  const treeArray = handler();
-
-  //clear DOM
-  let maxLevelOfTree = 0,
-    treeOffset = 0;
-  treeEl.textContent = "";
-  treeArray.forEach(tree => {
-    tree.forEach(node => {
-      if (node.x > maxLevelOfTree) maxLevelOfTree = node.x;
-      createNode(node, treeOffset);
-    });
-    //next tree^s DOM y offset=maxLevelofTree
-    treeOffset += maxLevelOfTree + 1;
-    maxLevelOfTree = 0;
-  });
-  zoomTree(0);
-}
-
 function preOperationSetup(handler, node, placeholder, opName) {
   if (placeholder) inputEl.setAttribute("placeholder", placeholder);
   isInputing = true;
@@ -308,10 +313,14 @@ export function treeOperationsHandler(handler) {
     }
     const loadLocal = e.target.closest(".fa-upload");
     if (loadLocal) {
+      handler("load");
       return;
     }
     const saveLocal = e.target.closest(".fa-download");
     if (saveLocal) {
+      handler("save");
+      showSaveMsg();
+      return;
     }
     const node = e.target.closest(".node");
     //if inputting count this click as submit
@@ -370,7 +379,6 @@ export function treeOperationsHandler(handler) {
     const bfs = e.target.closest(".bfs");
     if (bfs) {
       preAnimationSetup(handler, bfs, "bfs");
-      return;
     }
   });
 }

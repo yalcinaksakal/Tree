@@ -255,6 +255,20 @@ p {
   padding: 0 0.5rem;
 }
 
+/* saved */
+.saved {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  font-size: 30px;
+  background: whitesmoke;
+  color: rgb(5, 186, 5);
+  width: 150px;
+  text-align: center;
+  border-radius: 10px;
+}
 /* ---------------------------------------- */
 
 /* scroll bar */

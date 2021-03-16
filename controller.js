@@ -65,6 +65,10 @@ function startAnimation(operation) {
   return treeModel.arrayDfsBfs;
 }
 
+function saveToLocal() {
+  localStorage.setItem("tree", JSON.stringify(controlRenderTree()));
+}
+
 const controlTreeOperations = function (
   operation,
   nodeId,
@@ -73,6 +77,11 @@ const controlTreeOperations = function (
 ) {
   const treeNode = findNodeById(+nodeId);
   switch (operation) {
+    case "save":
+      saveToLocal();
+      break;
+    case "load":
+      break;
     case "deleteAll":
       treeModel.claenTreeArray();
       treeView.renderTreeHandler(controlRenderTree); //update DOM
