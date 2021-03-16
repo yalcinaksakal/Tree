@@ -136,7 +136,7 @@ const controlTreeOperations = function (
 };
 
 ///init
-treeModel.treeInit();
+if (!loadFromLocal()) treeModel.treeInit();
 
 pageFunctionality.pageFunctionality();
 treeView.renderTreeHandler(controlRenderTree);
