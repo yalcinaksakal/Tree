@@ -9,7 +9,7 @@ const treeItemEl = document.querySelector(".tree-item");
 const scalableEl = document.querySelector(".scalable");
 const nav = document.querySelector(".nav");
 const navSearchEl = document.getElementById("tree-search");
-
+const saveLoadEl = document.querySelector(".save-load");
 const nodeWidth = 4; //nodes are 4rem
 
 export const remToPx = parseFloat(
@@ -105,7 +105,7 @@ function renameNode(node) {
   //update node info
   node.setAttribute("title", `Name: ${inputEl.value}, ID: ${inputObject.node}`);
 
-  //p element of node holds name of node
+  //p element of node holds name of node (4th element is p)
   node.childNodes[4].textContent = inputEl.value.slice(0, 7);
 }
 
@@ -147,7 +147,12 @@ function normalizeNode(node) {
   inputEl.style.color = "white";
   inputEl.value = "";
   isInputing = false;
-  node.style.background = "rgb(45, 138, 196)";
+  if (node) node.style.background = "rgb(45, 138, 196)";
+}
+
+function newTree() {
+  //create and show new tree
+  showEl(inputObject.func(inputObject.operation, null, inputEl.value));
 }
 
 ///submit input
@@ -162,23 +167,31 @@ function submitInput() {
       case "addChild":
         addChild();
         break;
+      case "newTree":
+        newTree();
+        break;
     }
-    // if (inputObject.operation === "rename") renameNode(nodeAtOperation);
   }
   //end operation return to normal state
   normalizeNode(nodeAtOperation);
 }
 
 function startOperation(node) {
-  node.style.background = "#3DFEAE";
-  inputEl.style.top = +node.style.top.slice(0, -3) + 5 + "rem"; //node height 4rem
-  inputEl.style.left = node.style.left;
+  if (node === "newTree") {
+    const { x, y } = saveLoadEl.getBoundingClientRect();
+    inputEl.style.top = y - 50 + "px";
+    inputEl.style.left = x + "px";
+  } else {
+    node.style.background = "#3DFEAE";
+    inputEl.style.top = +node.style.top.slice(0, -3) + 5 + "rem"; //node height 4rem
+    inputEl.style.left = node.style.left;
+  }
   treeEl.appendChild(inputEl);
   inputEl.focus();
   inputEl.addEventListener("keypress", ifEnter);
   //scale page to 1:1
   zoomTree(1);
-  scrollTo(node.id);
+  if (node.id) scrollTo(node.id);
 }
 
 //create all nodes adn DOM them
@@ -203,7 +216,7 @@ export function renderTreeHandler(handler) {
 }
 
 function preOperationSetup(handler, node, placeholder, opName) {
-  inputEl.setAttribute("placeholder", placeholder);
+  if (placeholder) inputEl.setAttribute("placeholder", placeholder);
   isInputing = true;
   inputObject = {
     func: handler,
@@ -281,6 +294,25 @@ export function treeOperationsHandler(handler) {
   //tree board functionality
   treeItemEl.addEventListener("click", function (e) {
     e.preventDefault();
+    //load save clean new-tree
+    const deleteAllNodes = e.target.closest(".fa-broom");
+
+    if (deleteAllNodes) {
+      handler("deleteAll");
+      return;
+    }
+    const newTree = e.target.closest(".fa-plus-square");
+    if (newTree) {
+      preOperationSetup(handler, "newTree", "Tree name", "newTree");
+      return;
+    }
+    const loadLocal = e.target.closest(".fa-upload");
+    if (loadLocal) {
+      return;
+    }
+    const saveLocal = e.target.closest(".fa-download");
+    if (saveLocal) {
+    }
     const node = e.target.closest(".node");
     //if inputting count this click as submit
     if (isInputing && !e.target.closest(".input-el")) submitInput();
@@ -317,7 +349,6 @@ export function treeOperationsHandler(handler) {
       findNewParent();
       return;
     }
-    //load save clean new-tree
   });
 
   //nav functionality

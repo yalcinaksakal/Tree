@@ -58,7 +58,7 @@ function changeParent(treeNode, targetNodeId) {
 
 function startAnimation(operation) {
   //empty animation array
-  treeModel.arrayDfsBfs.length = 0;
+  treeModel.claenArrayDfsBfs();
   //for each tree create animation arr
   for (let tree of Object.values(treeModel.treeArray))
     operation === "dfs" ? tree.dfsSequence() : tree.bfsSequence();
@@ -73,6 +73,15 @@ const controlTreeOperations = function (
 ) {
   const treeNode = findNodeById(+nodeId);
   switch (operation) {
+    case "deleteAll":
+      treeModel.claenTreeArray();
+      treeView.renderTreeHandler(controlRenderTree); //update DOM
+      break;
+    case "newTree":
+      const createdTree = treeModel.newTree(newName);
+      treeModel.treeArray[createdTree.identifier] = createdTree;
+      treeView.renderTreeHandler(controlRenderTree);
+      return createdTree.identifier;
     case "dfs":
     case "bfs":
       return startAnimation(operation);

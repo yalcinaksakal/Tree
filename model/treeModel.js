@@ -275,58 +275,12 @@ const getSampleTree = () => {
   return sampleTree;
 };
 
+export const claenTreeArray = () => (treeArray = []);
+export const claenArrayDfsBfs = () => (arrayDfsBfs = []);
 //demo tree
 export const treeInit = () => {
   const sampleTree = getSampleTree();
   treeArray[sampleTree.identifier] = sampleTree;
 };
 
-// export default new Tree();
-/*
-
-const tree = new Tree("root");
-tree.name = "firstTree";
-// console.log(tree.name);
-// console.log(tree.identifier);
-// console.log(tree.children);
-// console.log(tree.childrenCount);
-// console.log(tree.parentNode);
-
-tree
-  .createChildNode("child1")
-  .createChildNode("one")
-  .createChildNode("one-1")
-  .createChildNode("one-deeper")
-  .parentNode.parentNode.createChildNode("two")
-  .createChildNode("two-1")
-  .createChildNode("two-1-deeper")
-  .createChildNode("one-1");
-const prev = tree.createChildNode("prev");
-
-console.log("has prev", tree.hasChildNode("prev"));
-console.log("has prev", tree.hasChildNode(prev));
-
-////
-console.log("parent of prev", prev.parentNode);
-tree.removeChildNode(prev);
-console.log("has prev", tree.hasChildNode(prev));
-console.log("parent of prev after deletion", prev.parentNode);
-
-//
-tree.appendChildNode(prev);
-
-tree.print();
-//
-prev.parentNode = tree.getChildNode("child1");
-console.log(prev.parentNode.name);
-tree.print();
-
-tree.traverse(node => console.log(node.name));
-//search for a node in tree
-console.log(tree.traverse(node => node.name === "one-deeper"));
-console.log(tree.findNodeByName("one-deeper"));
-console.log(tree.findAllNodeByName("one-1"));
-//handle below situations
-prev.appendChildNode(tree); //infinite circular relation (parent contains child, child contains parent)
-prev.appendChildNode(prev); //insert itself as a child, infinite loop
-*/
+export const newTree = name => new Tree(name);
