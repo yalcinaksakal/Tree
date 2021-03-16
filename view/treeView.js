@@ -3,7 +3,6 @@
 //   }
 import { zoomTree } from "../view/pageFuncitonalityView.js";
 import * as helperFunc from "../helperFunctions.js";
-import { arrayDFS } from "../model/treeModel.js";
 
 const treeEl = document.querySelector(".tree");
 const treeItemEl = document.querySelector(".tree-item");
@@ -202,6 +201,17 @@ export function renderTreeHandler(handler) {
   });
   zoomTree(0);
 }
+
+function preOperationSetup(handler, node, placeholder, opName) {
+  inputEl.setAttribute("placeholder", placeholder);
+  isInputing = true;
+  inputObject = {
+    func: handler,
+    node: node.id,
+    operation: opName,
+  };
+  startOperation(node);
+}
 // --------------------------------------------------
 // nav
 
@@ -239,18 +249,30 @@ function normalizeTree() {
     node.style.background = "rgb(45, 138, 196)";
   });
   document.querySelector(".dfs").classList.remove("selected");
+  document.querySelector(".bfs").classList.remove("selected");
   isAnimating = false;
   treeItemEl.style.pointerEvents = "auto";
   if (navSearchEl.placeholder === "Animating, please wait")
     navSearchEl.placeholder = "Ready to search";
 }
-function animateDfs(index = 0) {
+function animateAlgorithm(index = 0) {
   if (animationArray[index]) {
     changeStyleOfNode(animationArray[index]);
-    setTimeout(() => animateDfs(index + 1), animationDuration);
+    setTimeout(() => animateAlgorithm(index + 1), animationDuration);
   } else {
     setTimeout(() => normalizeTree(), animationDuration);
   }
+}
+
+function preAnimationSetup(func, btn, animationName) {
+  //guard clause
+  if (isAnimating) return;
+  btn.classList.add("selected");
+  zoomTree(0);
+  isAnimating = true;
+  animationArray = func(animationName);
+  treeItemEl.style.pointerEvents = "none";
+  animateAlgorithm();
 }
 // --------------------------------------------------
 
@@ -260,49 +282,28 @@ export function treeOperationsHandler(handler) {
   treeItemEl.addEventListener("click", function (e) {
     e.preventDefault();
     const node = e.target.closest(".node");
-
     //if inputting count this click as submit
     if (isInputing && !e.target.closest(".input-el")) submitInput();
-
     //if searching new parent
     if (isSearchingParent) {
       setNewParent(handler, node);
       return;
     }
-
     if (!node)
       //guard
       return;
-
     //rename
     const rename = e.target.closest(".fa-quote-left");
     if (rename) {
-      inputEl.setAttribute("placeholder", "New name");
-      isInputing = true;
-      inputObject = {
-        func: handler,
-        node: node.id,
-        operation: "rename",
-      };
-      startOperation(node);
+      preOperationSetup(handler, node, "New name", "rename");
       return;
     }
-
     //Add child
     const addChid = e.target.closest(".fa-plus");
     if (addChid) {
-      inputEl.setAttribute("placeholder", "Child name");
-      isInputing = true;
-      inputObject = {
-        func: handler,
-        node: node.id,
-        operation: "addChild",
-      };
-      startOperation(node);
-
+      preOperationSetup(handler, node, "Child name", "addChild");
       return;
     }
-
     //delete node
     const deleteNode = e.target.closest(".fa-trash");
     if (deleteNode) {
@@ -325,22 +326,19 @@ export function treeOperationsHandler(handler) {
   });
   nav.addEventListener("click", e => {
     const searchIcon = e.target.closest(".fa-search");
-
     if (searchIcon) {
       startSearch(handler);
       navSearchEl.focus();
       return;
     }
-
     const dfs = e.target.closest(".dfs");
     if (dfs) {
-      zoomTree(0);
-      isAnimating = true;
-      dfs.classList.add("selected");
-      animationArray = handler("dfs");
-      treeItemEl.style.pointerEvents = "none";
-
-      animateDfs();
+      preAnimationSetup(handler, dfs, "dfs");
+      return;
+    }
+    const bfs = e.target.closest(".bfs");
+    if (bfs) {
+      preAnimationSetup(handler, bfs, "bfs");
       return;
     }
   });

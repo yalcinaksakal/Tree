@@ -56,12 +56,13 @@ function changeParent(treeNode, targetNodeId) {
   }
 }
 
-function startDFS() {
+function startAnimation(operation) {
   //empty animation array
-  treeModel.arrayDFS.length = 0;
+  treeModel.arrayDfsBfs.length = 0;
   //for each tree create animation arr
-  for (let tree of Object.values(treeModel.treeArray)) tree.dfsSequence();
-  return treeModel.arrayDFS;
+  for (let tree of Object.values(treeModel.treeArray))
+    operation === "dfs" ? tree.dfsSequence() : tree.bfsSequence();
+  return treeModel.arrayDfsBfs;
 }
 
 const controlTreeOperations = function (
@@ -73,7 +74,8 @@ const controlTreeOperations = function (
   const treeNode = findNodeById(+nodeId);
   switch (operation) {
     case "dfs":
-      return startDFS();
+    case "bfs":
+      return startAnimation(operation);
     case "search":
       return search(nodeId);
     case "rename":

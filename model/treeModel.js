@@ -12,7 +12,8 @@ const uniqueId = (() => {
 
 export let nodePosY = 0;
 export let treeArray = {}; //Al trees created on DOM by user
-export let arrayDFS = [];
+export let arrayDfsBfs = [];
+let arrayBfs = [];
 let nodesArray = [];
 
 class Tree {
@@ -167,18 +168,35 @@ class Tree {
   print() {
     return `${this.name}${this.#getTreeString(this, 2)}`;
   }
-
+  //DFS---------------------
+  #dfsPush(node) {
+    arrayDfsBfs.push({ id: node.identifier, type: "visit" });
+    this.#getDfsSeq(node);
+    arrayDfsBfs.push({ id: node.identifier, type: "leave" });
+  }
   #getDfsSeq(node) {
-    node.children.forEach(child => {
-      arrayDFS.push({ id: child.identifier, type: "visit" });
-      this.#getDfsSeq(child);
-      arrayDFS.push({ id: child.identifier, type: "leave" });
-    });
+    node.children.forEach(child => this.#dfsPush(child));
   }
   dfsSequence() {
-    arrayDFS.push({ id: this.identifier, type: "visit" });
-    this.#getDfsSeq(this);
-    arrayDFS.push({ id: this.identifier, type: "leave" });
+    this.#dfsPush(this);
+  }
+  //BFS-------------------
+  #getBfsSeq(index = 0) {
+    if (!arrayBfs[index]) return;
+    arrayBfs[index].children.forEach(child => arrayBfs.push(child));
+    this.#getBfsSeq(index + 1);
+  }
+  bfsSequence() {
+    arrayBfs.push(this);
+    this.#getBfsSeq();
+
+    arrayBfs.forEach(node =>
+      arrayDfsBfs.push(
+        { id: node.identifier, type: "visit" },
+        { id: node.identifier, type: "leave" }
+      )
+    );
+    arrayBfs = [];
   }
   //traverse all leaves of "this" and run cb function, Depth first search
   traverse(callBackFunc) {
@@ -262,7 +280,6 @@ export const treeInit = () => {
   const sampleTree = getSampleTree();
   treeArray[sampleTree.identifier] = sampleTree;
 };
-
 
 // export default new Tree();
 /*
