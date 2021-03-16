@@ -37,7 +37,9 @@ class Tree {
   get identifier() {
     return this.#id;
   }
-
+  set identifier(newId) {
+    if (newId) this.#id = newId;
+  }
   get children() {
     return Array.from(this.#children.values());
   }

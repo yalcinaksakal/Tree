@@ -69,6 +69,25 @@ function saveToLocal() {
   localStorage.setItem("tree", JSON.stringify(controlRenderTree()));
 }
 
+function loadFromLocal() {
+  const getData = JSON.parse(localStorage.getItem("tree"));
+  if (!getData) return false;
+  treeModel.claenTreeArray();
+  getData.forEach(tree =>
+    tree.forEach((node, i) => {
+      if (!i) {
+        const newTree = treeModel.newTree(node.nodeName);
+        newTree.identifier = node.nodeId;
+        treeModel.treeArray[newTree.identifier] = newTree;
+      } else {
+        findNodeById(node.parentId).createChildNode(node.nodeName).identifier =
+          node.nodeId;
+      }
+    })
+  );
+  return true;
+}
+
 const controlTreeOperations = function (
   operation,
   nodeId,
@@ -81,6 +100,9 @@ const controlTreeOperations = function (
       saveToLocal();
       break;
     case "load":
+      if (loadFromLocal()) treeView.renderTreeHandler(controlRenderTree);
+      else return false;
+      return true;
       break;
     case "deleteAll":
       treeModel.claenTreeArray();

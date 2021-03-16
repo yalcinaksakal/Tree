@@ -118,8 +118,9 @@ function showErr(msg) {
   setTimeout(() => normalizeNode(parentSearchingNode), 2000);
 }
 
-function showSaveMsg() {
+function showSaveMsg(msg) {
   saveMsgEl.hidden = false;
+  saveMsgEl.textContent = msg;
   setTimeout(() => (saveMsgEl.hidden = true), 1000);
 }
 // --------------------------------------------------
@@ -313,13 +314,13 @@ export function treeOperationsHandler(handler) {
     }
     const loadLocal = e.target.closest(".fa-upload");
     if (loadLocal) {
-      handler("load");
+      showSaveMsg(handler("load") ? "Loaded" : "Err: No data");
       return;
     }
     const saveLocal = e.target.closest(".fa-download");
     if (saveLocal) {
       handler("save");
-      showSaveMsg();
+      showSaveMsg("Saved");
       return;
     }
     const node = e.target.closest(".node");
