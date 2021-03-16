@@ -206,7 +206,7 @@ function submitInput() {
 function startOperation(node) {
   if (node === "newTree") {
     const { x, y } = saveLoadEl.getBoundingClientRect();
-    inputEl.style.top = y - 50 + "px";
+    inputEl.style.top = y + "px";
     inputEl.style.left = x + "px";
   } else {
     node.style.background = "#3DFEAE";
