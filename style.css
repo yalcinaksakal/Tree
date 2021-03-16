@@ -278,12 +278,19 @@ p {
 
 /* meda queries */
 @media screen and (max-width: 650px) {
+  .tree-item {
+    top: 6rem;
+  }
+  .nav {
+    height: 4rem;
+  }
   #tree-search {
     width: 9rem;
+    top: 0.8rem;
   }
 
   .algorithm {
-    top: 3.9vh;
+    top: 0.9rem;
     font-size: 1.3rem;
     border-radius: 5px;
   }
@@ -317,7 +324,7 @@ p {
   .fa-search,
   .fa-search-minus {
     font-size: 1rem;
-    top: 2.4rem;
+    top: 1.4rem;
   }
   .fa-search {
     left: 9.8rem;
@@ -328,13 +335,12 @@ p {
 
   .scale-normal {
     font-size: 1.4rem;
-    top: 4.3vh;
+    top: 1rem;
     right: 2.3rem;
   }
 }
 @media screen and (max-width: 400px) {
   .algorithm {
-    top: 4vh;
     font-size: 0.6rem;
   }
 
