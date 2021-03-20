@@ -73,18 +73,25 @@ function loadFromLocal() {
   const getData = JSON.parse(localStorage.getItem("tree"));
   if (!getData) return false;
   treeModel.claenTreeArray();
+  const tempObj = {};
+  //first create nodes
   getData.forEach(tree =>
-    tree.forEach((node, i) => {
-      if (!i) {
-        const newTree = treeModel.newTree(node.nodeName);
-        newTree.identifier = node.nodeId;
-        treeModel.treeArray[newTree.identifier] = newTree;
-      } else {
-        findNodeById(node.parentId).createChildNode(node.nodeName).identifier =
-          node.nodeId;
-      }
+    tree.forEach(node => {
+      const newTree = treeModel.newTree(node.nodeName);
+      newTree.identifier = node.nodeId;
+      tempObj[newTree.identifier] = newTree;
     })
   );
+  ///then set parents
+  getData.forEach(tree =>
+    tree.forEach((node, i) => {
+      if (i) tempObj[node.nodeId].parentNode = tempObj[node.parentId];
+    })
+  );
+  //push roots to treearray
+  Object.values(tempObj).forEach(node => {
+    if (!node.parentNode) treeModel.treeArray[node.identifier] = node;
+  });
   return true;
 }
 
