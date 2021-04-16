@@ -5,10 +5,15 @@ const uniqueId = (() => {
       yield id++;
     }
   }
-
   const gen = uniqueIdGenerator();
   return () => gen.next().value;
 })();
+
+// const myIdGen = (function* () {
+//   let id = Date.now();
+//   while (true) yield id++;
+// })();
+// console.log(myIdGen.next(), myIdGen.next());
 
 export let nodePosY = 0;
 export let treeArray = {}; //Al trees created on DOM by user
