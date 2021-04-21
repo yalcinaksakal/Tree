@@ -148,4 +148,4 @@ if (!loadFromLocal()) treeModel.treeInit();
 pageFunctionality.pageFunctionality();
 treeView.renderTreeHandler(controlRenderTree);
 treeView.treeOperationsHandler(controlTreeOperations);
-window.onresize = () => location.reload();
+//window.onresize = () => location.reload();
